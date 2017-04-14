@@ -8,29 +8,29 @@
 
 <ion-content padding>
 
-<ion-card>
-  <ion-card-header>
-    Location info:
-  </ion-card-header>
-  <ion-card-content>
-    <p>lat: {{lat | number: '1.2-6'}}</p>
-    <p>long: {{lng | number: '1.2-6'}}</p>
-    <p>accuracy: {{acc | number: '1.2-3'}}</p>
-    <p>status: {{status}}</p>
-    <p>log: {{log}}</p>
-    
-  </ion-card-content>
-</ion-card>
+  <ion-card>
+    <ion-card-header>
+      Location info:
+    </ion-card-header>
+    <ion-card-content>
+      <p>lat: {{lat | number: '1.2-6'}}</p>
+      <p>long: {{lng | number: '1.2-6'}}</p>
+      <p>accuracy: {{acc | number: '1.2-3'}}</p>
+      <p>status: {{status}}</p>
+      <p>log: {{log}}</p>
 
-<div class="refreshButton">
-  <button ion-button default="true" outline="true" color="accent" (click)="showCords()"><ion-icon name="locate" ></ion-icon></button>
-</div>
-<div class="refreshButton">
-  <button ion-button default="true" outline="true" color="darkAccent" (click)="enableBackgroundGeolocation()">START</button>
-</div>
-<div class="refreshButton">
-  <button ion-button default="true" outline="true" color="darkAccent" (click)="stopBackgroundGeolocation()">STOP</button>
-</div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="refreshButton">
+    <button ion-button default="true" outline="true" color="accent" (click)="showCords()"><ion-icon name="locate" ></ion-icon></button>
+  </div>
+  <div class="refreshButton">
+    <button ion-button default="true" outline="true" color="darkAccent" (click)="enableBackgroundGeolocation()">START</button>
+  </div>
+  <div class="refreshButton">
+    <button ion-button default="true" outline="true" color="darkAccent" (click)="disableBackgroundGeolocation()">STOP</button>
+  </div>
 
   <ion-list>
     <ion-list-header>
@@ -38,11 +38,11 @@
       <ion-badge item-right color="primaryIndigo">{{timePeriod}}</ion-badge>
     </ion-list-header>
     <ion-item class="rangeSlider">
-      <!--<ion-range min="5" max="60" snaps=true step="5" color="primaryIndigo" [(ngModel)]="timePeriod">-->
-        <ion-range min="12" max="60" snaps=true step="12" color="primaryIndigo" [(ngModel)]="timePeriod">
+      <ion-range min="1" max="10" snaps=true step="1" color="primaryIndigo" [(ngModel)]="timePeriod">
+      <!--<ion-range min="12" max="60" snaps=true step="12" color="primaryIndigo" [(ngModel)]="timePeriod">-->
 
-        <ion-label range-left>12</ion-label>
-        <ion-label range-right>60</ion-label>
+        <ion-label range-left>1</ion-label>
+        <ion-label range-right>10</ion-label>
       </ion-range>
     </ion-item>
   </ion-list>
