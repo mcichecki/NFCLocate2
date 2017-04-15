@@ -1,10 +1,10 @@
-<ion-header>
+<!--<ion-header>
   <ion-navbar>
     <ion-title>
       NFCLocate
     </ion-title>
   </ion-navbar>
-</ion-header>
+</ion-header>-->
 
 <ion-content padding>
 
@@ -23,22 +23,22 @@
   </ion-card>
 
   <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="accent" (click)="showCords()"><ion-icon name="locate" ></ion-icon></button>
+    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="showCords()"><ion-icon name="locate" ></ion-icon></button>
   </div>
   <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="darkAccent" (click)="enableBackgroundGeolocation()">START</button>
+    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="enableBackgroundGeolocation()">START</button>
   </div>
   <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="darkAccent" (click)="disableBackgroundGeolocation()">STOP</button>
+    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="disableBackgroundGeolocation()">STOP</button>
   </div>
 
   <ion-list>
-    <ion-list-header>
+    <ion-list-header class="range-title">
       update interval
-      <ion-badge item-right color="primaryIndigo">{{timePeriod}}</ion-badge>
+      <ion-badge item-right color="secondaryCarrot">{{timePeriod}}</ion-badge>
     </ion-list-header>
     <ion-item class="rangeSlider">
-      <ion-range min="1" max="10" snaps=true step="1" color="primaryIndigo" [(ngModel)]="timePeriod">
+      <ion-range min="1" max="10" snaps=true step="1" color="secondaryCarrot" [(ngModel)]="timePeriod">
       <!--<ion-range min="12" max="60" snaps=true step="12" color="primaryIndigo" [(ngModel)]="timePeriod">-->
 
         <ion-label range-left>1</ion-label>

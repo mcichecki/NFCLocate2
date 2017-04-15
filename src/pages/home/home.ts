@@ -14,7 +14,7 @@ export class HomePage {
 
   lat: any;
   lng: any;
-  accuracy: any;
+  acc: any;
   status: any;
   log: any;
   timePeriod: number = 1;
@@ -29,7 +29,7 @@ export class HomePage {
     this.geolocation.getCurrentPosition().then((resp) => {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
-      this.accuracy = resp.coords.accuracy;
+      this.acc = resp.coords.accuracy;
       this.status = "Geolocation"
     }).catch((error) => {
       console.log("Error")
@@ -63,7 +63,7 @@ export class HomePage {
     this.backgroundGeolocation.configure(config).subscribe((location: BackgroundGeolocationResponse) => {
       this.lat = location.latitude;
       this.lng = location.longitude;
-      this.accuracy = location.accuracy;
+      this.acc = location.accuracy;
       //this.backgroundGeolocation.finish();
     });
     this.backgroundGeolocation.start();
