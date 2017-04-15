@@ -12,12 +12,13 @@
     <ion-card-header>
       Location info:
     </ion-card-header>
+    
     <ion-card-content>
       <p>lat: {{lat | number: '1.2-6'}}</p>
       <p>long: {{lng | number: '1.2-6'}}</p>
-      <p>accuracy: {{acc | number: '1.2-3'}}</p>
-      <p>status: {{status}}</p>
-      <p>log: {{log}}</p>
+      <p *ngIf="acc">accuracy: {{acc | number: '1.2-3'}} m</p>
+      <p *ngIf="status">status: {{status}}</p>
+      <p *ngIf="log">log: {{log}}</p>
 
     </ion-card-content>
   </ion-card>
@@ -27,9 +28,10 @@
   </div>
   <div class="refreshButton">
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="enableBackgroundGeolocation()">START</button>
-  </div>
-  <div class="refreshButton">
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="disableBackgroundGeolocation()">STOP</button>
+  </div>
+    <div class="refreshButton">
+    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="sendSMS()">SMS</button>
   </div>
 
   <ion-list>

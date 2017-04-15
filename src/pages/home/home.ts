@@ -3,11 +3,12 @@ import { NavController } from 'ionic-angular';
 
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+import { SMS } from '@ionic-native/sms';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [Geolocation, BackgroundGeolocation],
+  providers: [Geolocation, BackgroundGeolocation, SMS],
 })
 
 export class HomePage {
@@ -23,7 +24,8 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
     private geolocation: Geolocation,
-    private backgroundGeolocation: BackgroundGeolocation) { }
+    private backgroundGeolocation: BackgroundGeolocation,
+    private sms: SMS) { }
 
   showCords() {
     this.geolocation.getCurrentPosition().then((resp) => {
@@ -75,5 +77,17 @@ export class HomePage {
   disableBackgroundGeolocation() {
     this.status = "Background stop";
     this.backgroundGeolocation.stop();
+  }
+
+  sendSMS(){
+
+    var smsOptions = {
+      android: {
+        intent: ""
+      }
+    }
+
+    this.sms.send("691443886","test sms", smsOptions);
+    this.status = "SMS";
   }
 }
