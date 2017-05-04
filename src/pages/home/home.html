@@ -1,11 +1,3 @@
-<!--<ion-header>
-  <ion-navbar>
-    <ion-title>
-      NFCLocate
-    </ion-title>
-  </ion-navbar>
-</ion-header>-->
-
 <ion-content padding>
 
   <ion-card>
@@ -19,6 +11,7 @@
       <p *ngIf="acc">accuracy: {{acc | number: '1.2-3'}} m</p>
       <p *ngIf="status">status: {{status}}</p>
       <p *ngIf="log">log: {{log}}</p>
+      <p *ngIf="time">time: {{currentTime}}</p>
 
     </ion-card-content>
   </ion-card>
@@ -31,7 +24,7 @@
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="disableBackgroundGeolocation()">STOP</button>
   </div>
     <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="sendSMS()">SMS</button>
+    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="sendHttpPost()">HTTP POST</button>
   </div>
 
   <ion-list>

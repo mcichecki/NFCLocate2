@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-
+import { Http } from '@angular/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
-import { SMS } from '@ionic-native/sms';
+
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [Geolocation, BackgroundGeolocation, SMS],
+  providers: [Geolocation, BackgroundGeolocation],
 })
 
 export class HomePage {
@@ -16,23 +17,34 @@ export class HomePage {
   lat: any;
   lng: any;
   acc: any;
+  alti: any;
+  head: any;
+  speed: any;
   status: any;
   log: any;
   timePeriod: number = 1;
+  currentTime: any;
+
+  localServer = 'http://192.168.0.18:8080';
+  onlineServer = 'https://nfc-locate.herokuapp.com/';
+  server = this.onlineServer;
 
   updateInterval = 60000; //60000ms = 1min
 
   constructor(public navCtrl: NavController,
     private geolocation: Geolocation,
     private backgroundGeolocation: BackgroundGeolocation,
-    private sms: SMS) { }
+    private http: Http) { }
 
   showCords() {
     this.geolocation.getCurrentPosition().then((resp) => {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
       this.acc = resp.coords.accuracy;
-      this.status = "Geolocation"
+      this.alti = resp.coords.altitude;
+      this.head = resp.coords.altitude;
+      this.speed = resp.coords.speed;
+      this.status = "Geolocation";
     }).catch((error) => {
       console.log("Error")
     });
@@ -52,7 +64,7 @@ export class HomePage {
       startForeground: true,
       stopOnStillActivity: false,
       activityType: 'AutomotiveNavigation',
-      url: 'http://192.168.0.18:8080', // url: 'http://localhost:8080'
+      url: this.server,//'http://192.168.0.18:8080',//'http://localhost:8080',//'
       syncThreshold: 100,
       httpHeaders: {
         'X-FOO': 'bar'
@@ -66,6 +78,7 @@ export class HomePage {
       this.lat = location.latitude;
       this.lng = location.longitude;
       this.acc = location.accuracy;
+      this.currentTime = location.time;
       //this.backgroundGeolocation.finish();
     });
     this.backgroundGeolocation.start();
@@ -79,15 +92,26 @@ export class HomePage {
     this.backgroundGeolocation.stop();
   }
 
-  sendSMS(){
+  sendHttpPost() {
+    var body: any;
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    this.status = "HTTP POST";
 
-    var smsOptions = {
-      android: {
-        intent: ""
-      }
-    }
 
-    this.sms.send("691443886","test sms", smsOptions);
-    this.status = "SMS";
+    body = {
+      latitude: this.lat,
+      longitude: this.lng,
+      accuracy: this.acc,
+      altitude: this.alti,
+      speed: this.speed,
+    };
+
+    //this.http.post('http://192.168.0.18:8080', JSON.stringify(body), {headers: headers})
+    this.http.post(this.server, JSON.stringify(body))
+      .map(res => res.json())
+      .subscribe(data => {
+        console.log(data);
+      });
   }
 }
