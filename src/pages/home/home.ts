@@ -26,7 +26,7 @@ export class HomePage {
   currentTime: any;
 
   localServer = 'http://192.168.0.18:8080';
-  onlineServer = 'https://nfc-locate.herokuapp.com/';
+  onlineServer = 'https://nfc-locate.herokuapp.com/';//
   server = this.onlineServer;
 
   updateInterval = 60000; //60000ms = 1min
