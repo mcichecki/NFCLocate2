@@ -1,3 +1,5 @@
+import { TabsPage } from './../pages/tabs/tabs';
+import { WifiLocationPage } from './../pages/wifi-location/wifi-location';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -11,7 +13,9 @@ import { HomePage } from '../pages/home/home';
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    WifiLocationPage,
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -21,7 +25,9 @@ import { HomePage } from '../pages/home/home';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    WifiLocationPage,
+    TabsPage
   ],
   providers: [
     StatusBar,

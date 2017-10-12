@@ -43,16 +43,31 @@ $colors: (
   secondaryGreen: #2AB753,
 );
 
+//light theme
+$background-color: #ffffff;
+
+$card-ios-background-color: #ffffff;
+$card-md-background-color: #ffffff;
+
+$list-background-color: #ffffff;
+
+$list-text-color: #222;
+
+$tabs-md-tab-icon-color-active: color($colors, secondaryRuby);
+$tabs-md-tab-text-color-active: color($colors, secondaryRuby);
+
+// $tabs-md-tab-icon-color: map-get($map: colors, $key: secondaryRuby)
+// $tabs-md-tab-icon-color-active: map-get($map: colors, $key: )
 
 //dark theme
-$background-color: #202B33;
+// $background-color: #202B33;
 
-$card-ios-background-color: #333F4C;
-$card-md-background-color: #333F4C;
+// $card-ios-background-color: #333F4C;
+// $card-md-background-color: #333F4C;
 
-$list-background-color: #202B33;
+// $list-background-color: #202B33;
 
-$list-text-color: #ffffff;
+// $list-text-color: #ffffff;
 
 
 
