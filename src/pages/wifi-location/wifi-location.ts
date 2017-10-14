@@ -1,18 +1,17 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ErrorHandler } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the WifiLocationPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+declare var WifiWizard: any;
+
 @Component({
   selector: 'page-wifi-location',
   templateUrl: 'wifi-location.html',
 })
 
 export class WifiLocationPage {
+
+  ssid: any;
+  networkList = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -21,4 +20,17 @@ export class WifiLocationPage {
     console.log('ionViewDidLoad WifiLocationPage');
   }
 
+  getSSIDName() {
+    console.log("GET SSID");
+    WifiWizard.getCurrentSSID((ssid: String) => this.ssid = ssid, this.errorHandler);
+  }
+
+  getNetworkList() {
+    this.networkList = [];
+    WifiWizard.getScanResults({}, (networkList) => this.networkList = networkList, this.errorHandler);
+  }
+
+  errorHandler(e) {
+    alert('Problem');
+  }
 }
