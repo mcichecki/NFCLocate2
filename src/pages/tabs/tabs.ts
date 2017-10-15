@@ -1,4 +1,4 @@
-import { WifiLocationPage } from './../wifi-location/wifi-location';
+import { WifiLocationChooserPage } from './../wifi-location-chooser/wifi-location-chooser';
 import { HomePage } from './../home/home';
 import { Component } from '@angular/core';
 
@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 export class TabsPage {
 
   tab1 = HomePage;
-  tab2 = WifiLocationPage;
+  tab2 = WifiLocationChooserPage;
 
   constructor() {
   }

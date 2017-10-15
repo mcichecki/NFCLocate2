@@ -18,6 +18,8 @@ export class WifiLocationPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WifiLocationPage');
+
+    console.log(this.navParams.get('name'));
   }
 
   getSSIDName() {

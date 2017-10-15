@@ -1,3 +1,4 @@
+import { WifiLocationChooserPage } from './../pages/wifi-location-chooser/wifi-location-chooser';
 import { TabsPage } from './../pages/tabs/tabs';
 import { WifiLocationPage } from './../pages/wifi-location/wifi-location';
 import { HttpModule } from '@angular/http';
@@ -9,30 +10,42 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { DatabaseProvider } from '../providers/database/database';
+
+import { IonicStorageModule } from '@ionic/storage';
+
+import { SQLitePorter } from '@ionic-native/sqlite-porter';
+import { SQLite } from '@ionic-native/sqlite';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     WifiLocationPage,
+    WifiLocationChooserPage,
     TabsPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpModule
+    HttpModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
     WifiLocationPage,
+    WifiLocationChooserPage,
     TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    DatabaseProvider,
+    SQLite,
+    SQLitePorter
   ]
 })
 export class AppModule {}
