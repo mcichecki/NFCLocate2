@@ -1,3 +1,4 @@
+import { LocationEditPage } from './../pages/location-edit/location-edit';
 import { WifiLocationChooserPage } from './../pages/wifi-location-chooser/wifi-location-chooser';
 import { TabsPage } from './../pages/tabs/tabs';
 import { WifiLocationPage } from './../pages/wifi-location/wifi-location';
@@ -23,6 +24,7 @@ import { SQLite } from '@ionic-native/sqlite';
     HomePage,
     WifiLocationPage,
     WifiLocationChooserPage,
+    LocationEditPage,
     TabsPage
   ],
   imports: [
@@ -37,6 +39,7 @@ import { SQLite } from '@ionic-native/sqlite';
     HomePage,
     WifiLocationPage,
     WifiLocationChooserPage,
+    LocationEditPage,
     TabsPage
   ],
   providers: [

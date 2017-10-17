@@ -14,11 +14,25 @@
 </ion-header>
 
 <ion-content>
-
   <ion-list>
-    <ion-item *ngFor="let location of buildings" (click)="openLocationScan(location)">
-      {{ location.id }} | {{ location.name }}
-    </ion-item>
+    <ion-item-sliding *ngFor="let building of buildings">
+      <ion-item>{{ building?.name }}
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="openLocationScan(building)" color="secondaryBlue">
+          <ion-icon name="information"></ion-icon>
+          More
+        </button>
+        <button ion-button (click)="edit(building)" color="secondaryCarrot">
+            <ion-icon name="create"></ion-icon>
+            Edit
+          </button>
+        <button ion-button (click)="delete(building)" color="secondaryRuby">
+          <ion-icon name="close"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 
 </ion-content>

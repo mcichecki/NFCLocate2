@@ -1,3 +1,4 @@
+import { LocationEditPage } from './../location-edit/location-edit';
 import { DatabaseProvider } from './../../providers/database/database';
 import { WifiLocationPage } from './../wifi-location/wifi-location';
 import { Component } from '@angular/core';
@@ -67,4 +68,11 @@ export class WifiLocationChooserPage {
       })
    }
 
+   edit(building) {
+       this.navCtrl.push(LocationEditPage, building);
+   }
+
+   delete(building) {
+       console.log("delete" + building.name);
+   }
 }
