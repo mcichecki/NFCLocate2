@@ -57,12 +57,22 @@ export class DatabaseProvider {
     });
   }
 
+  addLocation(name, floor, building) {
+    let data = [name, floor, building];
+    return this.database.executeSql("INSERT INTO lokalizacja (nazwaLokalizacji, pietro, idBudynku) VALUES (?,?,?)", data).then(data => {
+      return data;
+    }, err => {
+      return err;
+    })
+  }
+
   getAllBuildings() {
     return this.database.executeSql("SELECT * FROM budynek", []).then((data) => {
       let buildings = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
-            buildings.push({id: data.rows.item(i).idBudynku,
+          buildings.push({
+            idBuilding: data.rows.item(i).idBudynku,
             street: data.rows.item(i).ulica,
             number: data.rows.item(i).numerBudynku,
             city: data.rows.item(i).miasto,
@@ -76,6 +86,25 @@ export class DatabaseProvider {
       console.log('Error: ', err);
       return [];
     });
+  }
+
+  getLocationsFor(building) {
+    return this.database.executeSql("SELECT * FROM lokalizacja WHERE idBudynku = \"" + building + "\"", []).then((data) => {
+      let locations = [];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          locations.push({
+            idLokalizacji: data.rows.item(i).idLokalizacji,
+            idBudynku: data.rows.item(i).idBudynku,
+            name: data.rows.item(i).nazwaLokalizacji,
+            floor: data.rows.item(i).pietro
+          });
+        }
+      }
+      return locations;
+    }, err => {
+      return [];
+    })
   }
 
   getDatabaseState() {

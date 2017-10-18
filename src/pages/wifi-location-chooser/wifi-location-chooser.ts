@@ -26,31 +26,34 @@ export class WifiLocationChooserPage {
       console.log('ionViewDidLoad WifiLocationChooserPage');
    }
 
-   addButtonClicked() {
-      const alert = this.alertCtrl.create({
-         title: 'Location',
-         subTitle: 'Enter the name of location',
-         inputs: [
-            {
-               name: 'locationName',
-               placeholder: 'Enter the name of location'
-            }
-         ],
-         buttons: [
-            {
-               text: 'Cancel',
-               role: 'cancel',
-            },
-            {
-               text: 'OK',
-               handler: data => {
-                  this.insertBuilding(data.locationName);
-               }
-            }
-         ]
-      });
-      alert.present();
-   }
+//    addButtonClicked() {
+//       const alert = this.alertCtrl.create({
+//          title: 'Location',
+//          subTitle: 'Enter the name of the building',
+//          inputs: [
+//             {
+//                name: 'buildingName',
+//                placeholder: 'Enter the name of location'
+//             }
+//          ],
+//          buttons: [
+//             {
+//                text: 'Cancel',
+//                role: 'cancel',
+//             },
+//             {
+//                text: 'OK',
+//                handler: data => {
+//                    if (data.buildingName != "") { 
+//                     this.insertBuilding(data.buildingName);
+                    
+//                    }
+//                }
+//             }
+//          ]
+//       });
+//       alert.present();
+//    }
 
    loadBuildings() {
       this.databaseProvider.getAllBuildings().then(data => {

@@ -15,7 +15,7 @@ CREATE TABLE siec(idSieci INTEGER PRIMARY KEY AUTOINCREMENT,
                     poziomSygnalu INTEGER,
                     SSID TEXT,
                     BSSID TEXT,
-                    czestotliwosc INTEGER,
+                    czestotliwosc REAL,
                     idLokalizacji INTEGER,
                     FOREIGN KEY (idLokalizacji) REFERENCES budynek(idLokalizacji));
 

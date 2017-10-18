@@ -1,19 +1,57 @@
 <ion-header>
-    
-      <ion-navbar>
-        <ion-title>Wifi scanner</ion-title>
-      </ion-navbar>
-    
-    </ion-header>
+
+  <ion-navbar>
+    <ion-title>
+      Location chooser
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addButtonClicked()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
 
 <ion-content padding>
-    
-  <button ion-button (click)="getSSIDName()">SSID</button>
+  <ion-fab bottom right>
+    <button ion-fab (click)="addButtonClicked()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <ion-card *ngIf="shouldShowAdd">
+    <ion-card-content class="add_card">
+      <ion-list>
+        <ion-item>
+          <ion-input placeholder="Location name" type="text" [(ngModel)]="locationName"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input placeholder="Floor" type="text" input type="number" [(ngModel)]="floor"></ion-input>
+        </ion-item>
+
+        <ion-item align-items-center>
+          <button ion-button (click)="addConfirmationClicked()">
+            ADD
+          </button>
+          <button ion-button (click)="addCancelClicked()">
+            CANCEL
+          </button>
+        </ion-item>
+
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <!-- <button ion-button (click)="getSSIDName()">SSID</button>
   <button ion-button (click)="getNetworkList()">Network list</button>
+  <button ion-button (click)="addLocation()">Add location</button> -->
 
   <ion-list>
-    <ion-item *ngFor="let network of networkList">
-      {{ network.SSID }} {{ network.level}} dB
+    <ion-item *ngFor="let location of locations">
+      <!-- {{ network.SSID }} {{ network.level}} dB -->
+      {{ location.name }}, floor: {{ location.floor }}
     </ion-item>
   </ion-list>
 </ion-content>
