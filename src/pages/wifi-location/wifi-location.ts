@@ -3,8 +3,6 @@ import { DatabaseProvider } from './../../providers/database/database';
 import { Component, ErrorHandler } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
-declare var WifiWizard: any;
-
 @Component({
   selector: 'page-wifi-location',
   templateUrl: 'wifi-location.html',
@@ -69,21 +67,7 @@ export class WifiLocationPage {
     this.shouldShowAdd = false;
   }
 
-  getSSIDName() {
-    console.log("GET SSID");
-    WifiWizard.getCurrentSSID((ssid: String) => this.ssid = ssid, this.errorHandler);
-  }
-
-  getNetworkList() {
-    this.networkList = [];
-    WifiWizard.getScanResults({}, (networkList) => this.networkList = networkList, this.errorHandler);
-  }
-
   private insertLocation(locationName, floor) {
     console.log("INSERTLOCATION: " + locationName + " " + floor);
-  }
-
-  errorHandler(e) {
-    alert('Problem');
   }
 }

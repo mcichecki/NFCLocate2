@@ -1,24 +1,23 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ viewTitle }}</ion-title>
+    <ion-title>{{ pageTitle }}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
-  <ion-fab bottom right>
+  <ion-fab bottom right #fab>
     <button ion-fab color="secondaryRuby">
       <ion-icon name="arrow-dropup"></ion-icon>
     </button>
 
     <ion-fab-list side="top">
       <button ion-fab (click)="refresh()">
-        <ion-icon name="ion-loop"></ion-icon>
+        <ion-icon name="refresh"></ion-icon>
       </button>
-      <button ion-fab (click)="save()">save
-        <!-- <ion-icon name="ion-ios-download-outline"></ion-icon> -->
+      <button ion-fab (click)="save(fab)">
+        <ion-icon name="download"></ion-icon>
       </button>
     </ion-fab-list>
   </ion-fab>

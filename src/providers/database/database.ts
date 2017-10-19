@@ -47,6 +47,7 @@ export class DatabaseProvider {
       });
   }
 
+  // SQL INSERT
   addBuilding(name) {
     let data = [name]
     return this.database.executeSql("INSERT INTO budynek (nazwaBudynku) VALUES (?)", data).then(data => {
@@ -66,6 +67,17 @@ export class DatabaseProvider {
     })
   }
 
+  addNetwork(level, ssid, bssid, frequency, idLocation) {
+    let data = [level, ssid, bssid, frequency, idLocation];
+
+    return this.database.executeSql("INSERT INTO siec (poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES (?, ?, ?, ?, ?)", data).then(data => {
+      return data;
+    }, err => {
+      return err;
+    })
+  }
+
+  // SQL SELECT
   getAllBuildings() {
     return this.database.executeSql("SELECT * FROM budynek", []).then((data) => {
       let buildings = [];
@@ -128,6 +140,14 @@ export class DatabaseProvider {
     })
   }
 
+  // SQL DELETE
+  deleteWifiListFor(location) {
+    return this.database.executeSql("DELETE FROM siec WHERE idLokalizacji  = \"" + location + "\"", []).then(data => {
+      return [];
+    }, err => {
+      return [];
+    })
+  }
   getDatabaseState() {
     return this.databaseReady.asObservable();
   }
