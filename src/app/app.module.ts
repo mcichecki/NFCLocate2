@@ -1,5 +1,6 @@
+import { WifiScannerPage } from './../pages/wifi-scanner/wifi-scanner';
 import { LocationEditPage } from './../pages/location-edit/location-edit';
-import { WifiLocationChooserPage } from './../pages/wifi-location-chooser/wifi-location-chooser';
+import { WifiBuildingChooserPage } from './../pages/wifi-building-chooser/wifi-building-chooser';
 import { TabsPage } from './../pages/tabs/tabs';
 import { WifiLocationPage } from './../pages/wifi-location/wifi-location';
 import { HttpModule } from '@angular/http';
@@ -22,24 +23,29 @@ import { SQLite } from '@ionic-native/sqlite';
   declarations: [
     MyApp,
     HomePage,
+    WifiBuildingChooserPage,
     WifiLocationPage,
-    WifiLocationChooserPage,
     LocationEditPage,
+    WifiScannerPage,
     TabsPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: ['websql', 'sqlite', 'indexeddb']
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
+    WifiBuildingChooserPage,
     WifiLocationPage,
-    WifiLocationChooserPage,
     LocationEditPage,
+    WifiScannerPage,
     TabsPage
   ],
   providers: [

@@ -94,14 +94,35 @@ export class DatabaseProvider {
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
           locations.push({
-            idLokalizacji: data.rows.item(i).idLokalizacji,
-            idBudynku: data.rows.item(i).idBudynku,
+            idLocation: data.rows.item(i).idLokalizacji,
+            idBuilding: data.rows.item(i).idBudynku,
             name: data.rows.item(i).nazwaLokalizacji,
             floor: data.rows.item(i).pietro
           });
         }
       }
       return locations;
+    }, err => {
+      return [];
+    })
+  }
+
+  getWifiListFor(location) {
+    return this.database.executeSql("SELECT * FROM siec WHERE idLokalizacji = \"" + location + "\"", []).then(data => {
+      let networks = [];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          networks.push({
+            idNetwork: data.rows.item(i).idSieci,
+            idLocation: data.rows.item(i).idLokalizacji,
+            level: data.rows.item(i).poziomSygnalu,
+            SSID: data.rows.item(i).SSID,
+            BSSID: data.rows.item(i).BSSID,
+            frequency: data.rows.item(i).czestotliwosc
+          });
+        }
+      }
+      return networks;
     }, err => {
       return [];
     })

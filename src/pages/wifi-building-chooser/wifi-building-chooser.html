@@ -15,19 +15,19 @@
 
 <ion-content>
   <ion-list>
-    <ion-item-sliding *ngFor="let building of buildings">
+    <ion-item-sliding *ngFor="let building of buildings" (click)="openLocationScan(building, $event)">
       <ion-item>{{ building?.name }}
       </ion-item>
       <ion-item-options side="right">
-        <button ion-button (click)="openLocationScan(building)" color="secondaryBlue">
+        <button ion-button (click)="openLocationScan(building, $event)" color="secondaryBlue">
           <ion-icon name="information"></ion-icon>
           More
         </button>
-        <button ion-button (click)="edit(building)" color="secondaryCarrot">
+        <button ion-button (click)="edit(building, $event)" color="secondaryCarrot">
           <ion-icon name="create"></ion-icon>
           Edit
         </button>
-        <button ion-button (click)="delete(building)" color="secondaryRuby">
+        <button ion-button (click)="delete(building, $event)" color="secondaryRuby">
           <ion-icon name="close"></ion-icon>
           Delete
         </button>

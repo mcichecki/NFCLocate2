@@ -1,3 +1,4 @@
+import { WifiScannerPage } from './../wifi-scanner/wifi-scanner';
 import { DatabaseProvider } from './../../providers/database/database';
 import { Component, ErrorHandler } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
@@ -46,7 +47,7 @@ export class WifiLocationPage {
   }
 
   private addConfirmationClicked() {
-    if (this.locationName != "" && this.floor != ""){
+    if (this.locationName != "" && this.floor != "") {
       this.addLocation(this.locationName, this.floor, this.choosenBuilding);
       this.shouldShowAdd = false;
       this.locationName = "";
@@ -57,6 +58,11 @@ export class WifiLocationPage {
   private addLocation(locationName, floor, building) {
     this.databaseProvider.addLocation(locationName, floor, building);
     this.loadLocations();
+  }
+
+  openWifiScanner(location) {
+    console.log("openLocation")
+    this.navCtrl.push(WifiScannerPage, location);
   }
 
   private addCancelClicked() {

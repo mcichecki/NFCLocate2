@@ -5,18 +5,13 @@
       Location chooser
     </ion-title>
 
-    <ion-buttons end>
-      <button ion-button icon-only (click)="addButtonClicked()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
   <ion-fab bottom right>
-    <button ion-fab (click)="addButtonClicked()">
+    <button ion-fab (click)="addButtonClicked()" color="secondaryRuby">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
@@ -49,7 +44,7 @@
   <button ion-button (click)="addLocation()">Add location</button> -->
 
   <ion-list>
-    <ion-item *ngFor="let location of locations">
+    <ion-item *ngFor="let location of locations" (click)="openWifiScanner(location)">
       <!-- {{ network.SSID }} {{ network.level}} dB -->
       {{ location.name }}, floor: {{ location.floor }}
     </ion-item>
