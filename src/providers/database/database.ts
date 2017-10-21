@@ -77,6 +77,15 @@ export class DatabaseProvider {
     })
   }
 
+  // SQL UPDATE
+  editBuilding(building, id) {
+    return this.database.executeSql("UPDATE budynek SET nazwaBudynku = \"" + building.name + "\", ulica = \"" + building.street + "\", numerBudynku = \"" + building.number + "\", miasto = \"" + building.city + "\", kodPocztowy = \"" + building.postalCode + "\" WHERE idBudynku = \"" + id + "\"", []).then(data => {
+      return data;
+    }, err => {
+      return err;
+    });
+  }
+
   // SQL SELECT
   getAllBuildings() {
     return this.database.executeSql("SELECT * FROM budynek", []).then((data) => {

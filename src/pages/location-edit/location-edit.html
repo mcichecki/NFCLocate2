@@ -1,12 +1,51 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Edit location</ion-title>
+    <ion-title>Edit - {{ this.building.name }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
+  <ion-fab bottom right>
+    <button ion-fab [disabled]="!editForm.valid" (click)="editBuilding()" color="secondaryRuby">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <form>
+    <ion-list [formGroup]="editForm">
+      <ion-item>
+        <ion-label>
+          Name:
+        </ion-label>
+        <ion-input type="text" formControlName="name" [(ngModel)]="building.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Street:
+        </ion-label>
+        <ion-input type="text" formControlName="street" [(ngModel)]="building.street"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Number:
+        </ion-label>
+        <ion-input type="text" formControlName="number" [(ngModel)]="building.number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          City:
+        </ion-label>
+        <ion-input type="text" formControlName="city" [(ngModel)]="building.city"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Postal code:
+        </ion-label>
+        <ion-input type="text" formControlName="postalCode" [(ngModel)]="building.postalCode"></ion-input>
+      </ion-item>
+
+    </ion-list>
+  </form>
 
 </ion-content>

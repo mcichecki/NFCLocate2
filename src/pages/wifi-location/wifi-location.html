@@ -39,13 +39,9 @@
       </ion-list>
     </ion-card-content>
   </ion-card>
-  <!-- <button ion-button (click)="getSSIDName()">SSID</button>
-  <button ion-button (click)="getNetworkList()">Network list</button>
-  <button ion-button (click)="addLocation()">Add location</button> -->
 
   <ion-list>
     <ion-item *ngFor="let location of locations" (click)="openWifiScanner(location)">
-      <!-- {{ network.SSID }} {{ network.level}} dB -->
       {{ location.name }}, floor: {{ location.floor }}
     </ion-item>
   </ion-list>
