@@ -1,6 +1,7 @@
+import { WifiNetworkDetailsPage } from './../wifi-network-details/wifi-network-details';
 import { DatabaseProvider } from './../../providers/database/database';
 import { Component } from '@angular/core';
-import { NavController, NavParams, FabContainer, AlertController } from 'ionic-angular';
+import { NavController, NavParams, FabContainer, AlertController, ModalController } from 'ionic-angular';
 
 declare var WifiWizard: any;
 
@@ -15,7 +16,7 @@ export class WifiScannerPage {
   private networks = [];
   pageTitle: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private databaseProvider: DatabaseProvider, private alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private databaseProvider: DatabaseProvider, private alertCtrl: AlertController, private modalCtrl: ModalController) {
     this.choosenLocation = this.navParams.get('idLocation');
     this.pageTitle = this.navParams.get('name');
 
@@ -66,6 +67,12 @@ export class WifiScannerPage {
 
   deleteWifiList() {
     this.databaseProvider.deleteWifiListFor(this.choosenLocation);
+  }
+
+  showNetworkDetails(network) {
+    //this.navCtrl.push(WifiNetworkDetailsPage, network);
+    let modal = this.modalCtrl.create(WifiNetworkDetailsPage, network);
+    modal.present();
   }
 
   errorHandler(e) {

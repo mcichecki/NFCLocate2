@@ -157,6 +157,31 @@ export class DatabaseProvider {
       return [];
     })
   }
+
+  deleteBuilding(id) {
+    return this.database.executeSql("DELETE FROM budynek WHERE idBudynku = \"" + id + "\"", []).then(data => {
+      return [];
+    }, err => {
+      return [];
+    })
+  }
+
+  deleteNetwork(id) {
+    return this.database.executeSql("DELETE FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = \"" + id + "\")", []).then(data => {
+      return [];
+    }, err => {
+      return [];
+    })
+  }
+
+  deleteLocation(id) {
+    return this.database.executeSql("DELETE FROM lokalizacja WHERE idBudynku = \"" + id + "\"", []).then(data => {
+      return [];
+    }, err => {
+      return [];
+    })
+  }
+
   getDatabaseState() {
     return this.databaseReady.asObservable();
   }

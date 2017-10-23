@@ -1,3 +1,4 @@
+import { WifiNetworkDetailsPage } from './../pages/wifi-network-details/wifi-network-details';
 import { WifiScannerPage } from './../pages/wifi-scanner/wifi-scanner';
 import { LocationEditPage } from './../pages/location-edit/location-edit';
 import { WifiBuildingChooserPage } from './../pages/wifi-building-chooser/wifi-building-chooser';
@@ -27,6 +28,7 @@ import { SQLite } from '@ionic-native/sqlite';
     WifiLocationPage,
     LocationEditPage,
     WifiScannerPage,
+    WifiNetworkDetailsPage,
     TabsPage
   ],
   imports: [
@@ -46,6 +48,7 @@ import { SQLite } from '@ionic-native/sqlite';
     WifiLocationPage,
     LocationEditPage,
     WifiScannerPage,
+    WifiNetworkDetailsPage,
     TabsPage
   ],
   providers: [

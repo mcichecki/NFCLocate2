@@ -80,8 +80,13 @@ export class WifiBuildingChooserPage {
     }
 
     delete(building, ev) {
-        console.log("delete");        
         ev.stopPropagation();
-        console.log("delete" + building.name);
+        this.databaseProvider.deleteBuilding(building.idBuilding).then(data => {
+            this.databaseProvider.deleteNetwork(building.idBuilding).then(data => {
+                this.databaseProvider.deleteLocation(building.idBuilding).then(data => {
+                    this.loadBuildings();
+                })
+            })
+        })
     }
 }

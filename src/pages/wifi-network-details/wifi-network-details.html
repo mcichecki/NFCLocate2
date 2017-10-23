@@ -1,0 +1,51 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title> {{ network.SSID }} </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+
+  <ion-card>
+    <ion-list>
+      <ion-item>
+        <ion-label item-start>
+          Level:
+        </ion-label>
+        <ion-label item-content>
+          {{ network.level }} dB
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label item-start>
+          SSID:
+        </ion-label>
+        <ion-label item-content>
+          {{ network.SSID }}
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label item-start>
+          BSSID:
+        </ion-label>
+        <ion-label item-content>
+          {{ network.BSSID }}
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label item-start>
+          Frequency:
+        </ion-label>
+        <ion-label item-content>
+          {{ network.frequency }} MHz
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
+</ion-content>

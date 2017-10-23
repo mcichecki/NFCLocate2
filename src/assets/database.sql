@@ -21,12 +21,19 @@ CREATE TABLE siec(idSieci INTEGER PRIMARY KEY AUTOINCREMENT,
 
 INSERT INTO budynek(ulica, numerBudynku, miasto, kodPocztowy, nazwaBudynku) VALUES ('Nowowiejska', '15/19', 'Warszawa', '00-665', 'Wydział Elektroniki i Technik Informacyjnych');
 INSERT INTO budynek(ulica, numerBudynku, miasto, kodPocztowy, nazwaBudynku) VALUES ('Mlynarska', '7', 'Warszawa', '01-205', 'Freeport Metrics');
+INSERT INTO budynek(ulica, numerBudynku, miasto, kodPocztowy, nazwaBudynku) VALUES ('KEN 98', '77', 'Warszawa', '02-666', 'Dom');
 
-INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Skrzydlo A", '4', '1');
-INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Skrzydlo A", '3', '1');
-INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Skrzydlo C", '3', '1');
-INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Conference room", '0', '2');
+INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Skrzydlo A", '4', '1'); -- 1
+INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Skrzydlo A", '3', '1'); -- 2
+INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Skrzydlo C", '3', '1'); -- 3
+INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Conference room - Moskwa", '0', '2'); -- 4
+INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Conference room - Warsaw", '0', '2'); --5 
+INSERT INTO lokalizacja(nazwaLokalizacji, pietro, idBudynku) VALUES ("Room", '0', '3'); -- 6
 
-INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('12', 'siec1', 'bssid1', '2.5', '1');
-INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('22', 'siec2', 'bssid3', '5', '1');
-INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('24', 'siec3', 'bssid3', '5', '2');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('11', 'siec1', 'bssid1', '2.5', '1');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('22', 'siec2', 'bssid2', '5', '1');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('33', 'siec3', 'bssid3', '5', '3');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('44', 'siec4', 'bssid4', '5', '4');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('55', 'siec5', 'bssid5', '5', '5');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('66', 'siec6', 'bssid6', '5', '6');
+
