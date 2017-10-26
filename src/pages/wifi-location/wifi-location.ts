@@ -58,9 +58,19 @@ export class WifiLocationPage {
     this.loadLocations();
   }
 
-  openWifiScanner(location) {
-    console.log("openLocation")
+  openWifiScanner(location, ev) {
+    ev.stopPropagation();
     this.navCtrl.push(WifiScannerPage, location);
+  }
+
+  delete(location, ev) {
+    ev.stopPropagation();
+    console.log("location: " + location.idLocation);
+    this.databaseProvider.deleteNetworkForLocation(location.idLocation).then(data => {
+      this.databaseProvider.deleteLocationForLocation(location.idLocation).then(data => {
+        this.loadLocations();
+      })
+    })
   }
 
   private addCancelClicked() {

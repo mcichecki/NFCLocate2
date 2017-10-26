@@ -166,7 +166,7 @@ export class DatabaseProvider {
     })
   }
 
-  deleteNetwork(id) {
+  deleteNetworkForBuilding(id) {
     return this.database.executeSql("DELETE FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = \"" + id + "\")", []).then(data => {
       return [];
     }, err => {
@@ -174,8 +174,24 @@ export class DatabaseProvider {
     })
   }
 
-  deleteLocation(id) {
+  deleteNetworkForLocation(id) {
+    return this.database.executeSql("DELETE FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idLokalizacji = \"" + id + "\")", []).then(data => {
+      return [];
+    }, err => {
+      return [];
+    })
+  }
+
+  deleteLocationForBuilding(id) {
     return this.database.executeSql("DELETE FROM lokalizacja WHERE idBudynku = \"" + id + "\"", []).then(data => {
+      return [];
+    }, err => {
+      return [];
+    })
+  }
+
+  deleteLocationForLocation(id) {
+    return this.database.executeSql("DELETE FROM lokalizacja WHERE idLokalizacji = \"" + id + "\"", []).then(data => {
       return [];
     }, err => {
       return [];

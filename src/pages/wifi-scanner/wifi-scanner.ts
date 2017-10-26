@@ -38,8 +38,15 @@ export class WifiScannerPage {
   }
 
   refresh() {
-    this.networks = [];
-    WifiWizard.getScanResults({}, (networkList) => this.networks = networkList, this.errorHandler);
+    //this.networks = [];
+    WifiWizard.getScanResults({}, (networkList) => this.networkRefreshHandler(networkList), this.errorHandler);
+  }
+
+
+  networkRefreshHandler(networkList) {
+    this.networks = [...this.networks, ...networkList].reduce((s, i) => 
+      // !s.some(j => i.BSSID === j.BSSID && i.level < j.level) ? [...s, i] : s, []);
+      !s.some(j => i.BSSID === j.BSSID) ? [...s, i] : s, []);      
   }
 
   save(fab: FabContainer) {
