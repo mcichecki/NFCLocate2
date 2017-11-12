@@ -24,7 +24,7 @@
 
   <ion-list>
     <ion-item *ngFor="let network of networks" (click)="showNetworkDetails(network)">
-      {{ network.SSID }}
+      {{ network.level }} | {{ network.BSSID }}
     </ion-item>
   </ion-list>
 

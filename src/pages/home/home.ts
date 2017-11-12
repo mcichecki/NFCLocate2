@@ -96,8 +96,9 @@ export class HomePage {
     var body: any;
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    headers.append('name-test', 'value-test');
+    
     this.status = "HTTP POST";
-
 
     body = {
       latitude: this.lat,
@@ -107,8 +108,7 @@ export class HomePage {
       speed: this.speed,
     };
 
-    //this.http.post('http://192.168.0.18:8080', JSON.stringify(body), {headers: headers})
-    this.http.post(this.server, JSON.stringify(body))
+    this.http.post(this.server, JSON.stringify(body), JSON.stringify(headers))
       .map(res => res.json())
       .subscribe(data => {
         console.log(data);

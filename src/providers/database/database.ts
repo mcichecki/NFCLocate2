@@ -129,7 +129,7 @@ export class DatabaseProvider {
   }
 
   getWifiListFor(location) {
-    return this.database.executeSql("SELECT * FROM siec WHERE idLokalizacji = \"" + location + "\"", []).then(data => {
+    return this.database.executeSql("SELECT * FROM siec WHERE idLokalizacji = \"" + location + "\" ORDER BY poziomSygnalu DESC", []).then(data => {
       let networks = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
