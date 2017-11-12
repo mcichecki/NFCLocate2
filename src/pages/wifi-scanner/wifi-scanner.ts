@@ -1,3 +1,4 @@
+import { WifiProvider } from './../../providers/wifi/wifi';
 import { WifiNetworkDetailsPage } from './../wifi-network-details/wifi-network-details';
 import { DatabaseProvider } from './../../providers/database/database';
 import { Component } from '@angular/core';
@@ -16,7 +17,12 @@ export class WifiScannerPage {
   private networks = [];
   pageTitle: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private databaseProvider: DatabaseProvider, private alertCtrl: AlertController, private modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    private databaseProvider: DatabaseProvider,
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController) {
+
     this.choosenLocation = this.navParams.get('idLocation');
     this.pageTitle = this.navParams.get('name');
 
@@ -38,15 +44,14 @@ export class WifiScannerPage {
   }
 
   refresh() {
-    //this.networks = [];
+    this.networks = [];
     WifiWizard.getScanResults({}, (networkList) => this.networkRefreshHandler(networkList), this.errorHandler);
   }
 
-
   networkRefreshHandler(networkList) {
-    this.networks = [...this.networks, ...networkList].reduce((s, i) => 
+    this.networks = [...this.networks, ...networkList].reduce((s, i) =>
       // !s.some(j => i.BSSID === j.BSSID && i.level < j.level) ? [...s, i] : s, []);
-      !s.some(j => i.BSSID === j.BSSID) ? [...s, i] : s, []);      
+      !s.some(j => i.BSSID === j.BSSID) ? [...s, i] : s, []);
   }
 
   save(fab: FabContainer) {
@@ -54,8 +59,8 @@ export class WifiScannerPage {
     fab.close();
 
     this.deleteWifiList();
-    this.showAlert();     
-       
+    this.showAlert();
+
     for (let network of this.networks) {
       this.databaseProvider.addNetwork(network.level, network.SSID, network.BSSID, network.frequency, this.choosenLocation).then(data => {
         this.loadWifiList();

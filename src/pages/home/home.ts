@@ -1,3 +1,4 @@
+import { DatabaseProvider } from './../../providers/database/database';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Http } from '@angular/http';
@@ -5,6 +6,8 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 
 import 'rxjs/add/operator/map';
+
+declare var WifiWizard: any;
 
 @Component({
   selector: 'page-home',
@@ -25,6 +28,9 @@ export class HomePage {
   timePeriod: number = 1;
   currentTime: any;
 
+  private scannedNetworks = [];
+  private savedNetworks = [];
+
   localServer = 'http://192.168.0.18:8080';
   onlineServer = 'https://nfc-locate.herokuapp.com/';//
   server = this.onlineServer;
@@ -34,7 +40,16 @@ export class HomePage {
   constructor(public navCtrl: NavController,
     private geolocation: Geolocation,
     private backgroundGeolocation: BackgroundGeolocation,
-    private http: Http) { }
+    private http: Http,
+    private databaseProvider: DatabaseProvider) {
+      this.databaseProvider.getDatabaseState().subscribe( ready => {
+        if (ready) {
+          this.databaseProvider.getAllWifiList().then(data => {
+            this.savedNetworks = data;
+          })
+        }
+      })
+    }
 
   showCords() {
     this.geolocation.getCurrentPosition().then((resp) => {
@@ -97,7 +112,7 @@ export class HomePage {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append('name-test', 'value-test');
-    
+
     this.status = "HTTP POST";
 
     body = {
@@ -113,5 +128,47 @@ export class HomePage {
       .subscribe(data => {
         console.log(data);
       });
+  }
+
+  wifiLocation() {
+    // console.log("array size: " + this.scannedNetworks.length);
+    
+
+    console.log("savedNetworks: " + this.savedNetworks.length);
+    console.log("wifiLocation: " + this.defineBuilding());
+  }
+
+  private defineBuilding() {
+    var idBuilding;
+    for (let scannedNetwork of this.scannedNetworks) {
+      for (let savedNetwork of this.savedNetworks) {
+        if (scannedNetwork.BSSID == savedNetwork.BSSID) {
+          console.log("defineBuilding: " + savedNetwork.idLocation);
+
+          this.databaseProvider.getBuildingIDFor(savedNetwork.idLocation).then(data => {
+            console.log("data: " + data);
+            return idBuilding;
+          })
+
+          return idBuilding;
+        }
+      }
+    }
+  }
+
+  refresh() {
+    console.log("refresh");
+
+    this.scannedNetworks = [];
+    WifiWizard.getScanResults({}, (networkList) => {
+      this.scannedNetworks = networkList;
+      console.log("array size refresh: " + this.scannedNetworks.length);      
+    }, this.errorHandler);
+
+
+  }
+
+  errorHandler(e) {
+    alert('Problem');
   }
 }

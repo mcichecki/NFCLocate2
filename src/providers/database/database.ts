@@ -149,6 +149,33 @@ export class DatabaseProvider {
     })
   }
 
+  getAllWifiList() {
+    return this.database.executeSql("SELECT * FROM siec", []).then(data => {
+      let networks = [];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          networks.push({
+            idNetwork: data.rows.item(i).idSieci,
+            idLocation: data.rows.item(i).idLokalizacji,
+            BSSID: data.rows.item(i).BSSID,
+            level: data.rows.item(i).poziomSygnalu            
+          });
+        }
+      }
+      return networks;
+    }, err => {
+      return [];
+    })
+  }
+
+  getBuildingIDFor(location) {
+    return this.database.executeSql("SELECT * FROM lokalizacja WHERE idLokalizacji = \"" + location + "\"", []).then(data => {
+      return data.rows.item(0).idBudynku;
+    }, err => {
+      return [];
+    })
+  }
+
   // SQL DELETE
   deleteWifiListFor(location) {
     return this.database.executeSql("DELETE FROM siec WHERE idLokalizacji  = \"" + location + "\"", []).then(data => {

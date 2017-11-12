@@ -41,3 +41,17 @@
       </ion-range>
     </ion-item>
   </ion-list>
+
+<ion-item>
+  <button ion-button (click)="refresh()">REFRESH</button>
+</ion-item>
+
+<ion-item>
+  <button ion-button (click)="wifiLocation()">BUILDING CHECK</button>
+</ion-item>
+
+<!-- <ion-list>
+  <ion-item *ngFor="let network of scannedNetworks">
+    {{ network.level }} | {{ network.BSSID }}
+  </ion-item>
+</ion-list> -->
