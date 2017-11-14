@@ -176,6 +176,23 @@ export class DatabaseProvider {
     })
   }
 
+  //SELECT * FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = '3');
+  getNetworksFor(building) {
+    return this.database.executeSql("SELECT * FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = \"" + building + "\")", []).then(data => {
+      let networks = [];
+      if (data.rows.length > 0) {
+        var idLocation = 0;
+        for (var i=0; i<data.rows.length; i++) {
+          if (idLocation != data.rows.item(i).idLokalizacji) {
+            networks.push({
+              //to do: array of arrays;
+            })
+          }
+        }
+      }
+    })
+  }
+
   // SQL DELETE
   deleteWifiListFor(location) {
     return this.database.executeSql("DELETE FROM siec WHERE idLokalizacji  = \"" + location + "\"", []).then(data => {

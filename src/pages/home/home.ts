@@ -6,6 +6,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 declare var WifiWizard: any;
 
@@ -28,6 +29,8 @@ export class HomePage {
   timePeriod: number = 1;
   currentTime: any;
 
+  private currentBuilding: any;
+
   private scannedNetworks = [];
   private savedNetworks = [];
 
@@ -42,14 +45,14 @@ export class HomePage {
     private backgroundGeolocation: BackgroundGeolocation,
     private http: Http,
     private databaseProvider: DatabaseProvider) {
-      this.databaseProvider.getDatabaseState().subscribe( ready => {
-        if (ready) {
-          this.databaseProvider.getAllWifiList().then(data => {
-            this.savedNetworks = data;
-          })
-        }
-      })
-    }
+    this.databaseProvider.getDatabaseState().subscribe(ready => {
+      if (ready) {
+        this.databaseProvider.getAllWifiList().then(data => {
+          this.savedNetworks = data;
+        })
+      }
+    })
+  }
 
   showCords() {
     this.geolocation.getCurrentPosition().then((resp) => {
@@ -130,27 +133,12 @@ export class HomePage {
       });
   }
 
-  wifiLocation() {
-    // console.log("array size: " + this.scannedNetworks.length);
-    
-
-    console.log("savedNetworks: " + this.savedNetworks.length);
-    console.log("wifiLocation: " + this.defineBuilding());
-  }
-
   private defineBuilding() {
     var idBuilding;
     for (let scannedNetwork of this.scannedNetworks) {
       for (let savedNetwork of this.savedNetworks) {
         if (scannedNetwork.BSSID == savedNetwork.BSSID) {
-          console.log("defineBuilding: " + savedNetwork.idLocation);
-
-          this.databaseProvider.getBuildingIDFor(savedNetwork.idLocation).then(data => {
-            console.log("data: " + data);
-            return idBuilding;
-          })
-
-          return idBuilding;
+          return Observable.fromPromise(this.databaseProvider.getBuildingIDFor(savedNetwork.idLocation));
         }
       }
     }
@@ -162,10 +150,11 @@ export class HomePage {
     this.scannedNetworks = [];
     WifiWizard.getScanResults({}, (networkList) => {
       this.scannedNetworks = networkList;
-      console.log("array size refresh: " + this.scannedNetworks.length);      
+      this.defineBuilding().subscribe(idBuilding => {
+        this.currentBuilding = idBuilding;
+        console.log("wifiLocation: ", idBuilding);
+      })
     }, this.errorHandler);
-
-
   }
 
   errorHandler(e) {
