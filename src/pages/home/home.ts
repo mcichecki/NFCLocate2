@@ -157,6 +157,17 @@ export class HomePage {
     }, this.errorHandler);
   }
 
+  wifiLocation() {
+    this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
+      // console.log("NETWORKS: ", JSON.stringify(data));
+      console.log("FIRST: ", JSON.stringify(data[6]));
+
+      for (let key in data) {
+        console.log("key: ", JSON.stringify(data[key]));
+      }
+    })
+  }
+
   errorHandler(e) {
     alert('Problem');
   }

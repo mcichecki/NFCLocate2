@@ -158,7 +158,7 @@ export class DatabaseProvider {
             idNetwork: data.rows.item(i).idSieci,
             idLocation: data.rows.item(i).idLokalizacji,
             BSSID: data.rows.item(i).BSSID,
-            level: data.rows.item(i).poziomSygnalu            
+            level: data.rows.item(i).poziomSygnalu
           });
         }
       }
@@ -179,17 +179,31 @@ export class DatabaseProvider {
   //SELECT * FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = '3');
   getNetworksFor(building) {
     return this.database.executeSql("SELECT * FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = \"" + building + "\")", []).then(data => {
-      let networks = [];
+      let networks: { [id: number]: [any] } = {};
       if (data.rows.length > 0) {
-        var idLocation = 0;
-        for (var i=0; i<data.rows.length; i++) {
+        var idLocation = -1;
+        for (var i = 0; i < data.rows.length; i++) {
           if (idLocation != data.rows.item(i).idLokalizacji) {
-            networks.push({
-              //to do: array of arrays;
-            })
+            networks[data.rows.item(i).idLokalizacji] = [{
+              idNetwork: data.rows.item(i).idSieci,
+              idLocation: data.rows.item(i).idLokalizacji,
+              BSSID: data.rows.item(i).BSSID,
+              level: data.rows.item(i).poziomSygnalu
+            }];
+          } else {
+            networks[data.rows.item(i).idLokalizacji].push({
+              idNetwork: data.rows.item(i).idSieci,
+              idLocation: data.rows.item(i).idLokalizacji,
+              BSSID: data.rows.item(i).BSSID,
+              level: data.rows.item(i).poziomSygnalu
+            });
           }
+          idLocation = data.rows.item(i).idLokalizacji;
         }
       }
+      return networks;
+    }, err => {
+      return [];
     })
   }
 
