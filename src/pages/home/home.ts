@@ -32,6 +32,9 @@ export class HomePage {
   private currentBuilding: any;
 
   private scannedNetworks = [];
+  private scannedNetworksVector = [];
+
+  private savedNetworksVector = [];
   private savedNetworks = [];
 
   localServer = 'http://192.168.0.18:8080';
@@ -133,8 +136,85 @@ export class HomePage {
       });
   }
 
+  // BUTTON
+  refresh() {
+    console.log("refresh");
+
+    //TIME START
+    var start = performance.now();
+    //
+
+    this.scannedNetworks = [];
+    this.scannedNetworksVector = [];
+    WifiWizard.getScanResults({}, (networkList) => {
+      this.scannedNetworks = networkList;
+      this.scannedNetworksVector = this.createSavedNetworksVector();
+
+      this.defineBuilding().subscribe(idBuilding => {
+        this.currentBuilding = idBuilding;
+        //console.log("wifiLocation: ", idBuilding);
+      })
+    }, this.errorHandler);
+
+    //TIME STOP
+    var stop = performance.now();
+    console.log("TIME: ", (stop - start));
+    //
+  }
+
+  private createSavedNetworksVector() {
+    for (let scannedNetwork of this.scannedNetworks) {
+      this.savedNetworksVector.push(scannedNetwork.level);
+    }
+    return this.scannedNetworksVector;
+  }
+
+  // BUTTON
+  calculateEuclideanDistance() {
+    //TIME START
+    var start = performance.now();
+    //
+
+    this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
+      for (let key in data) {
+        console.log("KEY: ", key, JSON.stringify(this.createVector(data[key], key)));
+      }
+    })
+
+
+
+    //TIME STOP
+    var stop = performance.now();
+    console.log("TIME VECTOR: ", (stop - start));
+    //
+  }
+
+  private createVector(data: [any], key: string) {
+
+    this.savedNetworksVector = [];
+    var shouldAddValue: boolean = false;
+    var networkLevel = 0;
+
+    for (let scannedNetwork of this.scannedNetworks) {
+      for (let network of data) {
+        if (scannedNetwork.BSSID == network.BSSID) {
+          shouldAddValue = true;
+          networkLevel = network.level;
+          break;
+        }
+      }
+      if (shouldAddValue) {
+        this.savedNetworksVector.push(networkLevel);
+        shouldAddValue = false;
+      } else {
+        this.savedNetworksVector.push(-120);
+      }
+    }
+    return this.savedNetworksVector;
+  }
+
+  // BUILDING LOOKUP FUNCTION
   private defineBuilding() {
-    var idBuilding;
     for (let scannedNetwork of this.scannedNetworks) {
       for (let savedNetwork of this.savedNetworks) {
         if (scannedNetwork.BSSID == savedNetwork.BSSID) {
@@ -142,30 +222,6 @@ export class HomePage {
         }
       }
     }
-  }
-
-  refresh() {
-    console.log("refresh");
-
-    this.scannedNetworks = [];
-    WifiWizard.getScanResults({}, (networkList) => {
-      this.scannedNetworks = networkList;
-      this.defineBuilding().subscribe(idBuilding => {
-        this.currentBuilding = idBuilding;
-        console.log("wifiLocation: ", idBuilding);
-      })
-    }, this.errorHandler);
-  }
-
-  wifiLocation() {
-    this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
-      // console.log("NETWORKS: ", JSON.stringify(data));
-      console.log("FIRST: ", JSON.stringify(data[6]));
-
-      for (let key in data) {
-        console.log("key: ", JSON.stringify(data[key]));
-      }
-    })
   }
 
   errorHandler(e) {
