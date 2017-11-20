@@ -29,6 +29,8 @@ export class HomePage {
   timePeriod: number = 1;
   currentTime: any;
 
+  calculatedLocation: String;
+
   private currentBuilding: any;
 
   private scannedNetworks = [];
@@ -157,9 +159,18 @@ export class HomePage {
         console.log("SCANNED NETWORKS: ", this.scannedNetworksVector.length, " - ", JSON.stringify(this.scannedNetworksVector));
 
         this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
+          var tempDistance;
           for (let key in data) {
-            console.log("KEY: ", key);
-            console.log("EUCL: ", this.calculateEuclideanDistance(this.createVector(data[key])));
+            let distance = this.calculateDistaceForVector(this.createVector(data[key]));
+
+            if (tempDistance == undefined) {
+              tempDistance = distance;
+            } else {
+              if (tempDistance > distance) {
+                this.calculatedLocation = key;
+                tempDistance = distance;
+              }
+            }
           }
         })
       })
@@ -171,6 +182,10 @@ export class HomePage {
     //
   }
 
+  private calculateDistaceForVector(vector): number {
+    return this.calculateEuclideanDistance(vector) + this.calculateManhattanDistance(vector);
+  }
+
   private createScannedNetworkVector() {
     var scannedNetworksVector = [];
     for (let scannedNetwork of this.scannedNetworks) {
@@ -179,19 +194,34 @@ export class HomePage {
     return scannedNetworksVector;
   }
 
-  private calculateEuclideanDistance(savedNetworksVector: any) {
+  private calculateEuclideanDistance(savedNetworksVector: any): number {
     let vectorLength = this.scannedNetworksVector.length;
 
-    console.log("saved: ", JSON.stringify(savedNetworksVector));
-    console.log("scanned: ", JSON.stringify(this.scannedNetworksVector));
+    // console.log("saved: ", JSON.stringify(savedNetworksVector));
+    // console.log("scanned: ", JSON.stringify(this.scannedNetworksVector));
 
     var sum = 0;
     for (var i = 0; i < vectorLength; i++) {
-      var difference = Math.pow((Math.abs(savedNetworksVector[i]) - Math.abs(this.scannedNetworksVector[i])), 2);
+      var difference = Math.pow((savedNetworksVector[i] - this.scannedNetworksVector[i]), 2);
       sum += difference;
     }
 
     return Math.sqrt(sum);
+  }
+
+  private calculateManhattanDistance(savedNetworksVector: any): number {
+    let vectorLength = this.scannedNetworksVector.length;
+
+    // console.log("saved: ", JSON.stringify(savedNetworksVector));
+    // console.log("scanned: ", JSON.stringify(this.scannedNetworksVector));
+
+    var sum = 0;
+    for (var i = 0; i < vectorLength; i++) {
+      var difference = Math.abs(savedNetworksVector[i] - this.scannedNetworksVector[i]);
+      sum += difference;
+    }
+
+    return sum;
   }
 
   private createVector(data: [any]) {

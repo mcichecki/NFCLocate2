@@ -4,7 +4,7 @@
     <ion-card-header>
       Location info:
     </ion-card-header>
-    
+
     <ion-card-content>
       <p>lat: {{lat | number: '1.2-6'}}</p>
       <p>long: {{lng | number: '1.2-6'}}</p>
@@ -17,13 +17,15 @@
   </ion-card>
 
   <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="showCords()"><ion-icon name="locate" ></ion-icon></button>
+    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="showCords()">
+      <ion-icon name="locate"></ion-icon>
+    </button>
   </div>
   <div class="refreshButton">
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="enableBackgroundGeolocation()">START</button>
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="disableBackgroundGeolocation()">STOP</button>
   </div>
-    <div class="refreshButton">
+  <div class="refreshButton">
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="sendHttpPost()">HTTP POST</button>
   </div>
 
@@ -34,7 +36,7 @@
     </ion-list-header>
     <ion-item class="rangeSlider">
       <ion-range min="1" max="10" snaps=true step="1" color="darkIndingo" [(ngModel)]="timePeriod">
-      <!--<ion-range min="12" max="60" snaps=true step="12" color="primaryIndigo" [(ngModel)]="timePeriod">-->
+        <!--<ion-range min="12" max="60" snaps=true step="12" color="primaryIndigo" [(ngModel)]="timePeriod">-->
 
         <ion-label range-left>1</ion-label>
         <ion-label range-right>10</ion-label>
@@ -42,15 +44,21 @@
     </ion-item>
   </ion-list>
 
-<ion-item>
-  <button ion-button (click)="refresh()">REFRESH</button>
-</ion-item>
+  <ion-item>
+    <button ion-button (click)="refresh()">REFRESH</button>
+  </ion-item>
 
-<!-- <ion-item>
+  <ion-card>
+    <ion-card-content>
+      Location: {{ calculatedLocation }}
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-item>
   <button ion-button (click)="calculateEuclideanDistance()">EUCLIDEAN</button>
 </ion-item> -->
 
-<!-- <ion-list>
+  <!-- <ion-list>
   <ion-item *ngFor="let network of scannedNetworks">
     {{ network.level }} | {{ network.BSSID }}
   </ion-item>
