@@ -37,7 +37,7 @@ INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUE
 INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('44', 'siec4', 'bssid4', '5', '4');
 INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('55', 'siec5', 'bssid5', '5', '5');
 INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('-80', 'siec6', 'bssid6', '2402', '6');
-INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('20', 'siec7', 'b4:2a:0e:49:af:e5', '5000', '6');
+INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('20', 'siec7', 'b4:2a:0e:49:af:e5x', '5000', '6');
 INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('20', 'siec8', 'bssid8', '2570', '7');
 INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('20', 'siec9', 'bssid9', '2500', '7');
 INSERT INTO siec(poziomSygnalu, SSID, BSSID, czestotliwosc, idLokalizacji) VALUES ('20', 'siec10', 'bssid10', '2480', '7');

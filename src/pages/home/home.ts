@@ -39,9 +39,11 @@ export class HomePage {
   private savedNetworksVector = [];
   private savedNetworks = [];
 
-  localServer = 'http://192.168.0.18:8080';
+  localServer = 'http://192.168.0.17:8080';
   onlineServer = 'https://nfc-locate.herokuapp.com/';//
-  server = this.onlineServer;
+  server = this.localServer;
+
+  test: number = 0;
 
   updateInterval = 60000; //60000ms = 1min
 
@@ -87,11 +89,11 @@ export class HomePage {
       startForeground: true,
       stopOnStillActivity: false,
       activityType: 'AutomotiveNavigation',
-      url: this.server,//'http://192.168.0.18:8080',//'http://localhost:8080',//'
+      //url: this.server,//'http://192.168.0.18:8080',//'http://localhost:8080',//'
       syncThreshold: 100,
-      httpHeaders: {
-        'X-FOO': 'bar'
-      },
+      // httpHeaders: {
+      //   'X-FOO': 'bar'
+      // },
       pauseLocationUpdates: false,
       saveBatteryOnBackground: false,
       maxLocations: 100
@@ -103,6 +105,43 @@ export class HomePage {
       this.acc = location.accuracy;
       this.currentTime = location.time;
       //this.backgroundGeolocation.finish();
+      // console.log("TEST");
+
+      this.scannedNetworks = [];
+      this.scannedNetworksVector = [];
+
+      WifiWizard.getScanResults({}, (networkList) => {
+        this.scannedNetworks = networkList;
+        this.scannedNetworksVector = this.createScannedNetworkVector();
+        this.defineBuilding().subscribe(idBuilding => {
+          if (idBuilding) {
+            this.currentBuilding = idBuilding;
+            this.testMethod().subscribe(data => {
+              var tempDistance;
+              for (let key in data) {
+                let distance = this.calculateDistaceForVector(this.createVector(data[key]));
+
+                console.log("DISTANCE:, ", key, " - ", distance);
+                if (tempDistance == undefined) {
+                  tempDistance = distance;
+                  this.calculatedLocation = key;
+                } else {
+                  if (tempDistance > distance) {
+                    this.calculatedLocation = key;
+                    tempDistance = distance;
+                  }
+                }
+              }
+              this.sendHttpPost("LOCATION: " + this.calculatedLocation);
+            })
+
+          } else {
+            console.log("UNDEFINED");
+          }
+        });
+      });
+
+
     });
     this.backgroundGeolocation.start();
 
@@ -110,18 +149,19 @@ export class HomePage {
     this.log = config.fastestInterval;
   }
 
+  private testMethod() {
+    return Observable.fromPromise(this.databaseProvider.getNetworksFor(this.currentBuilding));
+  }
+
   disableBackgroundGeolocation() {
     this.status = "Background stop";
     this.backgroundGeolocation.stop();
   }
 
-  sendHttpPost() {
+  //BUTTON
+  sendHttpPost(buildingLocation) {
     var body: any;
     let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('name-test', 'value-test');
-
-    this.status = "HTTP POST";
 
     body = {
       latitude: this.lat,
@@ -131,12 +171,19 @@ export class HomePage {
       speed: this.speed,
     };
 
-    this.http.post(this.server, JSON.stringify(body), JSON.stringify(headers))
+    if (buildingLocation) {
+      body.buildingLocation = buildingLocation;
+    }
+
+
+    this.http.post(this.server, JSON.stringify(body))
       .map(res => res.json())
       .subscribe(data => {
         console.log(data);
       });
   }
+
+  
 
   // BUTTON
   refresh() {
@@ -144,36 +191,29 @@ export class HomePage {
 
     //TIME START
     var start = performance.now();
-    //
 
-    this.scannedNetworks = [];
-    this.scannedNetworksVector = [];
 
-    WifiWizard.getScanResults({}, (networkList) => {
-      this.scannedNetworks = networkList;
-      this.scannedNetworksVector = this.createScannedNetworkVector();
+    this.defineBuilding().subscribe(idBuilding => {
+      this.currentBuilding = idBuilding;
 
-      this.defineBuilding().subscribe(idBuilding => {
-        this.currentBuilding = idBuilding;
+      console.log("SCANNED NETWORKS: ", this.scannedNetworksVector.length, " - ", JSON.stringify(this.scannedNetworksVector));
 
-        console.log("SCANNED NETWORKS: ", this.scannedNetworksVector.length, " - ", JSON.stringify(this.scannedNetworksVector));
+      this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
+        var tempDistance;
+        for (let key in data) {
+          let distance = this.calculateDistaceForVector(this.createVector(data[key]));
 
-        this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
-          var tempDistance;
-          for (let key in data) {
-            let distance = this.calculateDistaceForVector(this.createVector(data[key]));
-
-            if (tempDistance == undefined) {
+          if (tempDistance == undefined) {
+            tempDistance = distance;
+          } else {
+            if (tempDistance > distance) {
+              this.calculatedLocation = key;
               tempDistance = distance;
-            } else {
-              if (tempDistance > distance) {
-                this.calculatedLocation = key;
-                tempDistance = distance;
-              }
             }
           }
-        })
+        }
       })
+
     }, this.errorHandler);
 
     //TIME STOP
@@ -257,6 +297,7 @@ export class HomePage {
         }
       }
     }
+    return Observable.of(null);
   }
 
   errorHandler(e) {
