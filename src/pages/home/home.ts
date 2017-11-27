@@ -1,12 +1,13 @@
 import { DatabaseProvider } from './../../providers/database/database';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
+import { RequestOptions } from '@angular/http/src/base_request_options';
 
 declare var WifiWizard: any;
 
@@ -41,7 +42,8 @@ export class HomePage {
 
   localServer = 'http://192.168.0.17:8080';
   onlineServer = 'https://nfc-locate.herokuapp.com/';//
-  server = this.localServer;
+  elkaServer = 'https://nefico.tele.pw.edu.pl:8080/geo';
+  server = this.elkaServer;
 
   test: number = 0;
 
@@ -132,11 +134,13 @@ export class HomePage {
                   }
                 }
               }
-              this.sendHttpPost("LOCATION: " + this.calculatedLocation);
+              // this.sendHttpPost("LOCATION: " + this.calculatedLocation);
+              this.sendHttpPut("Location" + this.calculatedLocation);
             })
 
           } else {
             console.log("UNDEFINED");
+            this.sendHttpPut(undefined);
           }
         });
       });
@@ -183,7 +187,29 @@ export class HomePage {
       });
   }
 
-  
+  sendHttpPut(buildingLocation) {
+    var body: any;
+    var headers = new Headers();
+
+    console.log("LAT: ", this.lat, " LNG: ", this.lng);
+
+    body = {
+      latitude: this.lat*22/7,
+      longitude: this.lng*22/7,
+      groupId: "lokalizacja"
+    };
+
+    if (buildingLocation) {
+      body.buildingLocation = buildingLocation;
+    }
+
+    headers.append('Content-Type', 'application-json');
+    headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
+
+    this.http.put(this.server, body, {headers: headers}).map(res => res.json()).subscribe(data => {
+      console.log("RESPONSE: ", JSON.stringify(data));
+    })
+  }
 
   // BUTTON
   refresh() {
