@@ -106,8 +106,6 @@ export class HomePage {
       this.lng = location.longitude;
       this.acc = location.accuracy;
       this.currentTime = location.time;
-      //this.backgroundGeolocation.finish();
-      // console.log("TEST");
 
       this.scannedNetworks = [];
       this.scannedNetworksVector = [];
@@ -134,7 +132,6 @@ export class HomePage {
                   }
                 }
               }
-              // this.sendHttpPost("LOCATION: " + this.calculatedLocation);
               this.sendHttpPut("Location" + this.calculatedLocation);
             })
 
@@ -191,11 +188,10 @@ export class HomePage {
     var body: any;
     var headers = new Headers();
 
-    console.log("LAT: ", this.lat, " LNG: ", this.lng);
-
     body = {
-      latitude: this.lat*22/7,
-      longitude: this.lng*22/7,
+      timestamp: Date.now(),
+      latitude: this.lat * 1.29,
+      longitude: this.lng * 1.13,
       groupId: "lokalizacja"
     };
 
@@ -203,21 +199,21 @@ export class HomePage {
       body.buildingLocation = buildingLocation;
     }
 
+    console.log("BODY: ", JSON.stringify(body));
+
     headers.append('Content-Type', 'application-json');
     headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
 
-    this.http.put(this.server, body, {headers: headers}).map(res => res.json()).subscribe(data => {
+    this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(data => {
       console.log("RESPONSE: ", JSON.stringify(data));
     })
   }
 
   // BUTTON
   refresh() {
-    console.log("refresh");
 
     //TIME START
     var start = performance.now();
-
 
     this.defineBuilding().subscribe(idBuilding => {
       this.currentBuilding = idBuilding;
