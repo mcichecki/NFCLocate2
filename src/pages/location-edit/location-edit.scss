@@ -1,0 +1,17 @@
+page-location-edit {
+    .back-button {
+        padding-left: 4px;
+      }
+      
+      // reference to add button
+      ion-header {
+        ion-navbar {
+          ion-buttons {
+            button {
+              // needed important.
+              padding-right: 4px !important;
+            }
+          }
+        }
+      }
+}

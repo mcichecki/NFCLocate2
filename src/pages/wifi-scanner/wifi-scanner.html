@@ -1,0 +1,31 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-fab bottom right #fab>
+    <button ion-fab color="secondaryRuby">
+      <ion-icon name="arrow-dropup"></ion-icon>
+    </button>
+
+    <ion-fab-list side="top">
+      <button ion-fab (click)="refresh()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+      <button ion-fab (click)="save(fab)">
+        <ion-icon name="download"></ion-icon>
+      </button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-list>
+    <ion-item *ngFor="let network of networks" (click)="showNetworkDetails(network)">
+      {{ network.level }} | {{ network.BSSID }}
+    </ion-item>
+  </ion-list>
+
+</ion-content>

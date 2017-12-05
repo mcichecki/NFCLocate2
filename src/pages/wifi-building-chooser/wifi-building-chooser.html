@@ -1,0 +1,34 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>
+      Buildings
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="addButtonClicked()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let building of buildings" (click)="openLocationScan(building, $event)">
+      <ion-item>{{ building?.name }}
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="edit(building, $event)" color="secondaryCarrot">
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button (click)="delete(building, $event)" color="secondaryRuby">
+          <ion-icon name="close"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>

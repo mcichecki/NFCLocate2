@@ -1,3 +1,4 @@
+import { WifiBuildingChooserPage } from './../pages/wifi-building-chooser/wifi-building-chooser';
 import { TabsPage } from './../pages/tabs/tabs';
 import { WifiLocationPage } from './../pages/wifi-location/wifi-location';
 import { HomePage } from './../pages/home/home';
