@@ -21,6 +21,8 @@ import { IonicStorageModule } from '@ionic/storage';
 import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { SQLite } from '@ionic-native/sqlite';
 
+import { Deeplinks } from '@ionic-native/deeplinks';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -58,7 +60,8 @@ import { SQLite } from '@ionic-native/sqlite';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DatabaseProvider,
     SQLite,
-    SQLitePorter
+    SQLitePorter,
+    Deeplinks
   ]
 })
 export class AppModule {}
