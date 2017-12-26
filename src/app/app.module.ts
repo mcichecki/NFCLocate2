@@ -22,6 +22,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import { SQLite } from '@ionic-native/sqlite';
 
 import { Deeplinks } from '@ionic-native/deeplinks';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { Deeplinks } from '@ionic-native/deeplinks';
     DatabaseProvider,
     SQLite,
     SQLitePorter,
-    Deeplinks
+    Deeplinks,
+    NativeStorage
   ]
 })
 export class AppModule {}
