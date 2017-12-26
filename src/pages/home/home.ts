@@ -44,6 +44,7 @@ export class HomePage {
 
   private updateInterval = 60000; //60000ms = 1min
 
+  isGeolocationEnabled: boolean = false;
   status: any;
   log: any;
   timePeriod: number = 1;
@@ -116,6 +117,8 @@ export class HomePage {
 
       alert.present();
     } else {
+      this.isGeolocationEnabled = true;
+
       this.backgroundGeolocation.configure(this.config).subscribe((location: BackgroundGeolocationResponse) => {
         
         this.location = {
@@ -167,7 +170,7 @@ export class HomePage {
   }
 
   disableBackgroundGeolocation() {
-    this.status = "Background stop";
+    this.isGeolocationEnabled = false;
     this.backgroundGeolocation.stop();
   }
 

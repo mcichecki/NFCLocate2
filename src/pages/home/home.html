@@ -16,8 +16,9 @@
   </ion-card>
 
   <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="enableBackgroundGeolocation()">START</button>
-    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="disableBackgroundGeolocation()">STOP</button>
+    <button ion-button [color]="isGeolocationEnabled ? 'disabled' : 'secondaryGreen'" [disabled]="isGeolocationEnabled" outline="false" (click)="enableBackgroundGeolocation()">START</button>
+
+    <button ion-button [color]="isGeolocationEnabled ? 'secondaryGreen' : 'disabled'" [disabled]="!isGeolocationEnabled" outline="false" (click)="disableBackgroundGeolocation()">STOP</button>
   </div>
 
   <ion-list>
