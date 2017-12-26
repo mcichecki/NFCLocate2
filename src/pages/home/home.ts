@@ -25,19 +25,7 @@ declare var WifiWizard: any;
 
 export class HomePage {
 
-  lat: any;
-  lng: any;
-  acc: any;
-  alti: any;
-  head: any;
-  speed: any;
-  status: any;
-  log: any;
-  timePeriod: number = 1;
-  currentTime: any;
-
-  calculatedLocation: String;
-
+  private calculatedLocation: String;
   private currentBuilding: any;
 
   private scannedNetworks = [];
@@ -47,17 +35,18 @@ export class HomePage {
   private savedNetworks = [];
 
   private receivedData: ReceivedData;
-
   private location: Location;
 
-  localServer = 'http://192.168.0.17:8080';
-  onlineServer = 'https://nfc-locate.herokuapp.com/';//
-  elkaServer = 'https://nefico.tele.pw.edu.pl:8080/geo';
-  server = this.elkaServer;
+  private localServer = 'http://192.168.0.17:8080';
+  private onlineServer = 'https://nfc-locate.herokuapp.com/';//
+  private elkaServer = 'https://nefico.tele.pw.edu.pl:8080/geo';
+  private server = this.elkaServer;
 
-  test: number = 0;
+  private updateInterval = 60000; //60000ms = 1min
 
-  updateInterval = 60000; //60000ms = 1min
+  status: any;
+  log: any;
+  timePeriod: number = 1;
 
   private config: BackgroundGeolocationConfig = {
     stationaryRadius: 50,
@@ -72,11 +61,7 @@ export class HomePage {
     startForeground: true,
     stopOnStillActivity: false,
     activityType: 'AutomotiveNavigation',
-    //url: this.server,//'http://192.168.0.18:8080',//'http://localhost:8080',//'
     syncThreshold: 100,
-    // httpHeaders: {
-    //   'X-FOO': 'bar'
-    // },
     pauseLocationUpdates: false,
     saveBatteryOnBackground: false,
     maxLocations: 100
@@ -294,38 +279,4 @@ export class HomePage {
   private errorHandler(e) {
     alert('Problem');
   }
-
-  // refresh() {
-
-  //   //TIME START
-  //   var start = performance.now();
-
-  //   this.defineBuilding().subscribe(idBuilding => {
-  //     this.currentBuilding = idBuilding;
-
-  //     console.log("SCANNED NETWORKS: ", this.scannedNetworksVector.length, " - ", JSON.stringify(this.scannedNetworksVector));
-
-  //     this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
-  //       var tempDistance;
-  //       for (let key in data) {
-  //         let distance = this.calculateDistaceForVector(this.createVector(data[key]));
-
-  //         if (tempDistance == undefined) {
-  //           tempDistance = distance;
-  //         } else {
-  //           if (tempDistance > distance) {
-  //             this.calculatedLocation = key;
-  //             tempDistance = distance;
-  //           }
-  //         }
-  //       }
-  //     })
-
-  //   }, this.errorHandler);
-
-  //   //TIME STOP
-  //   var stop = performance.now();
-  //   console.log("TIME: ", (stop - start));
-  //   //
-  // }
 }
