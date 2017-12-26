@@ -4,16 +4,17 @@
     <ion-title>
       Buildings
     </ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="addButtonClicked()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
+    <ion-fab bottom right>
+        <button ion-fab (click)="addButtonClicked()" color="secondaryRuby">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-fab>
+
   <ion-list>
     <ion-item-sliding *ngFor="let building of buildings" (click)="openLocationScan(building, $event)">
       <ion-item>{{ building?.name }}
