@@ -8,6 +8,9 @@ import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { SQLiteObject } from '@ionic-native/sqlite';
+import { LocationDB } from '../../classes/location-db';
+import { BuildingDB } from '../../classes/building-db';
+import { NetworkDB } from '../../classes/network-db';
 
 @Injectable()
 export class DatabaseProvider {
@@ -47,7 +50,8 @@ export class DatabaseProvider {
       });
   }
 
-  // SQL INSERT
+  // #region INSERT
+
   addBuilding(name) {
     let data = [name]
     return this.database.executeSql("INSERT INTO budynek (nazwaBudynku) VALUES (?)", data).then(data => {
@@ -77,7 +81,10 @@ export class DatabaseProvider {
     })
   }
 
-  // SQL UPDATE
+  // #endregion
+
+  // #region UPDATE
+
   editBuilding(building, id) {
     return this.database.executeSql("UPDATE budynek SET nazwaBudynku = \"" + building.name + "\", ulica = \"" + building.street + "\", numerBudynku = \"" + building.number + "\", miasto = \"" + building.city + "\", kodPocztowy = \"" + building.postalCode + "\" WHERE idBudynku = \"" + id + "\"", []).then(data => {
       return data;
@@ -86,10 +93,13 @@ export class DatabaseProvider {
     });
   }
 
-  // SQL SELECT
+  // #endregion
+
+  // #region SELECT
+
   getAllBuildings() {
     return this.database.executeSql("SELECT * FROM budynek", []).then((data) => {
-      let buildings = [];
+      let buildings : BuildingDB[] = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
           buildings.push({
@@ -111,7 +121,7 @@ export class DatabaseProvider {
 
   getLocationsFor(building) {
     return this.database.executeSql("SELECT * FROM lokalizacja WHERE idBudynku = \"" + building + "\"", []).then((data) => {
-      let locations = [];
+      let locations : LocationDB[] = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
           locations.push({
@@ -130,7 +140,7 @@ export class DatabaseProvider {
 
   getWifiListFor(location) {
     return this.database.executeSql("SELECT * FROM siec WHERE idLokalizacji = \"" + location + "\" ORDER BY poziomSygnalu DESC", []).then(data => {
-      let networks = [];
+      let networks : NetworkDB[] = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
           networks.push({
@@ -151,7 +161,7 @@ export class DatabaseProvider {
 
   getAllWifiList() {
     return this.database.executeSql("SELECT * FROM siec", []).then(data => {
-      let networks = [];
+      let networks : NetworkDB[] = [];
       if (data.rows.length > 0) {
         for (var i = 0; i < data.rows.length; i++) {
           networks.push({
@@ -179,7 +189,7 @@ export class DatabaseProvider {
   //SELECT * FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = '3');
   getNetworksFor(building) {
     return this.database.executeSql("SELECT * FROM siec WHERE (idLokalizacji) IN (SELECT idLokalizacji FROM lokalizacja WHERE idBudynku = \"" + building + "\")", []).then(data => {
-      let networks: { [id: number]: [any] } = {};
+      let networks: { [id: number]: NetworkDB[] } = {};
       if (data.rows.length > 0) {
         var idLocation = -1;
         for (var i = 0; i < data.rows.length; i++) {
@@ -207,7 +217,10 @@ export class DatabaseProvider {
     })
   }
 
-  // SQL DELETE
+  // #endregion
+
+  // #region DELETE
+
   deleteWifiListFor(location) {
     return this.database.executeSql("DELETE FROM siec WHERE idLokalizacji  = \"" + location + "\"", []).then(data => {
       return [];
@@ -259,4 +272,6 @@ export class DatabaseProvider {
   getDatabaseState() {
     return this.databaseReady.asObservable();
   }
+
+  // #endregion
 }

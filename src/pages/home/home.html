@@ -8,7 +8,6 @@
     <ion-card-content>
       <p>lat: {{lat | number: '1.2-6'}}</p>
       <p>long: {{lng | number: '1.2-6'}}</p>
-      <p *ngIf="acc">accuracy: {{acc | number: '1.2-3'}} m</p>
       <p *ngIf="status">status: {{status}}</p>
       <p *ngIf="log">log: {{log}}</p>
       <p *ngIf="time">time: {{currentTime}}</p>
@@ -16,11 +15,6 @@
     </ion-card-content>
   </ion-card>
 
-  <div class="refreshButton">
-    <button ion-button default="true" outline="true" color="secondaryRuby" (click)="showCords()">
-      <ion-icon name="locate"></ion-icon>
-    </button>
-  </div>
   <div class="refreshButton">
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="enableBackgroundGeolocation()">START</button>
     <button ion-button default="true" outline="true" color="secondaryRuby" (click)="disableBackgroundGeolocation()">STOP</button>
@@ -40,7 +34,7 @@
       </ion-range>
     </ion-item>
   </ion-list>
-
+<!-- 
   <ion-item>
     <button ion-button (click)="refresh()">REFRESH</button>
   </ion-item>
@@ -49,7 +43,7 @@
     <ion-card-content>
       Location: {{ calculatedLocation }}
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 
   <!-- <ion-item>
   <button ion-button (click)="calculateEuclideanDistance()">EUCLIDEAN</button>

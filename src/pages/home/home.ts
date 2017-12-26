@@ -13,6 +13,7 @@ import { MyApp } from '../../app/app.component';
 import { ReceivedData } from '../../classes/received-data';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { Location } from '../../classes/location';
 
 declare var WifiWizard: any;
 
@@ -46,6 +47,8 @@ export class HomePage {
   private savedNetworks = [];
 
   private receivedData: ReceivedData;
+
+  private location: Location;
 
   localServer = 'http://192.168.0.17:8080';
   onlineServer = 'https://nfc-locate.herokuapp.com/';//
@@ -118,20 +121,6 @@ export class HomePage {
     console.log("DATA - willEnter", JSON.stringify(this.receivedData));
   }
 
-  showCords() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-      this.lat = resp.coords.latitude;
-      this.lng = resp.coords.longitude;
-      this.acc = resp.coords.accuracy;
-      this.alti = resp.coords.altitude;
-      this.head = resp.coords.altitude;
-      this.speed = resp.coords.speed;
-      this.status = "Geolocation";
-    }).catch((error) => {
-      console.log("Error")
-    });
-  }
-
   enableBackgroundGeolocation() {
     if (!this.receivedData) {
       let alert = this.alertCtrl.create({
@@ -143,10 +132,12 @@ export class HomePage {
       alert.present();
     } else {
       this.backgroundGeolocation.configure(this.config).subscribe((location: BackgroundGeolocationResponse) => {
-        this.lat = location.latitude;
-        this.lng = location.longitude;
-        this.acc = location.accuracy;
-        this.currentTime = location.time;
+        
+        this.location = {
+          timestamp: Date.now(),
+          longitude: location.longitude,
+          latitude: location.latitude
+        }
   
         this.scannedNetworks = [];
         this.scannedNetworksVector = [];
@@ -154,13 +145,14 @@ export class HomePage {
         WifiWizard.getScanResults({}, (networkList) => {
           this.scannedNetworks = networkList;
           this.scannedNetworksVector = this.createScannedNetworkVector();
+
           this.defineBuilding().subscribe(idBuilding => {
             if (idBuilding) {
               this.currentBuilding = idBuilding;
-              this.testMethod().subscribe(data => {
+              this.getNetworkListPromise().subscribe(data => {
                 var tempDistance;
                 for (let key in data) {
-                  let distance = this.calculateDistaceForVector(this.createVector(data[key]));
+                  let distance = this.calculateDistaceForVector(this.createVector(data));
   
                   console.log("DISTANCE:, ", key, " - ", distance);
                   if (tempDistance == undefined) {
@@ -175,15 +167,12 @@ export class HomePage {
                 }
                 this.sendHttpPut("Location" + this.calculatedLocation);
               })
-  
             } else {
               console.log("UNDEFINED");
               this.sendHttpPut(undefined);
             }
           });
         });
-  
-  
       });
       this.backgroundGeolocation.start();
   
@@ -192,23 +181,23 @@ export class HomePage {
     }
   }
 
-  private testMethod() {
-    return Observable.fromPromise(this.databaseProvider.getNetworksFor(this.currentBuilding));
-  }
-
   disableBackgroundGeolocation() {
     this.status = "Background stop";
     this.backgroundGeolocation.stop();
   }
 
-  sendHttpPut(buildingLocation) {
+  private getNetworkListPromise(): Observable<any> {
+    return Observable.fromPromise(this.databaseProvider.getNetworksFor(this.currentBuilding));
+  }
+
+  private sendHttpPut(buildingLocation: any) {
     var body: any;
     var headers = new Headers();
 
     body = {
       timestamp: Date.now(),
-      latitude: this.lat * 1.29,
-      longitude: this.lng * 1.13,
+      latitude: this.location.latitude * 1.29,
+      longitude: this.location.longitude * 1.13,
       groupId: this.receivedData.groupId
     };
 
@@ -220,52 +209,21 @@ export class HomePage {
 
     headers.append('Content-Type', 'application-json');
     headers.append('Authorization', 'Basic ' + this.receivedData.key); // headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
-    
-    this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(data => {
-      console.log("RESPONSE: ", JSON.stringify(data));
-    })
-  }
 
-  // BUTTON
-  refresh() {
-
-    //TIME START
-    var start = performance.now();
-
-    this.defineBuilding().subscribe(idBuilding => {
-      this.currentBuilding = idBuilding;
-
-      console.log("SCANNED NETWORKS: ", this.scannedNetworksVector.length, " - ", JSON.stringify(this.scannedNetworksVector));
-
-      this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
-        var tempDistance;
-        for (let key in data) {
-          let distance = this.calculateDistaceForVector(this.createVector(data[key]));
-
-          if (tempDistance == undefined) {
-            tempDistance = distance;
-          } else {
-            if (tempDistance > distance) {
-              this.calculatedLocation = key;
-              tempDistance = distance;
-            }
-          }
-        }
-      })
-
-    }, this.errorHandler);
-
-    //TIME STOP
-    var stop = performance.now();
-    console.log("TIME: ", (stop - start));
-    //
+    this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(
+      success => {
+        console.log("Response: ", JSON.stringify(success));
+      }, error => {
+        console.error("Response: ", JSON.stringify(error));
+      }
+    )
   }
 
   private calculateDistaceForVector(vector): number {
     return this.calculateEuclideanDistance(vector) + this.calculateManhattanDistance(vector);
   }
 
-  private createScannedNetworkVector() {
+  private createScannedNetworkVector() : number[] {
     var scannedNetworksVector = [];
     for (let scannedNetwork of this.scannedNetworks) {
       scannedNetworksVector.push(scannedNetwork.level);
@@ -275,9 +233,6 @@ export class HomePage {
 
   private calculateEuclideanDistance(savedNetworksVector: any): number {
     let vectorLength = this.scannedNetworksVector.length;
-
-    // console.log("saved: ", JSON.stringify(savedNetworksVector));
-    // console.log("scanned: ", JSON.stringify(this.scannedNetworksVector));
 
     var sum = 0;
     for (var i = 0; i < vectorLength; i++) {
@@ -291,9 +246,6 @@ export class HomePage {
   private calculateManhattanDistance(savedNetworksVector: any): number {
     let vectorLength = this.scannedNetworksVector.length;
 
-    // console.log("saved: ", JSON.stringify(savedNetworksVector));
-    // console.log("scanned: ", JSON.stringify(this.scannedNetworksVector));
-
     var sum = 0;
     for (var i = 0; i < vectorLength; i++) {
       var difference = Math.abs(savedNetworksVector[i] - this.scannedNetworksVector[i]);
@@ -303,7 +255,7 @@ export class HomePage {
     return sum;
   }
 
-  private createVector(data: [any]) {
+  private createVector(data: [any]) : number[] {
 
     this.savedNetworksVector = [];
     var shouldAddValue: boolean = false;
@@ -328,7 +280,7 @@ export class HomePage {
   }
 
   // BUILDING LOOKUP FUNCTION
-  private defineBuilding() {
+  private defineBuilding() : Observable<any> {
     for (let scannedNetwork of this.scannedNetworks) {
       for (let savedNetwork of this.savedNetworks) {
         if (scannedNetwork.BSSID == savedNetwork.BSSID) {
@@ -339,7 +291,41 @@ export class HomePage {
     return Observable.of(null);
   }
 
-  errorHandler(e) {
+  private errorHandler(e) {
     alert('Problem');
   }
+
+  // refresh() {
+
+  //   //TIME START
+  //   var start = performance.now();
+
+  //   this.defineBuilding().subscribe(idBuilding => {
+  //     this.currentBuilding = idBuilding;
+
+  //     console.log("SCANNED NETWORKS: ", this.scannedNetworksVector.length, " - ", JSON.stringify(this.scannedNetworksVector));
+
+  //     this.databaseProvider.getNetworksFor(this.currentBuilding).then(data => {
+  //       var tempDistance;
+  //       for (let key in data) {
+  //         let distance = this.calculateDistaceForVector(this.createVector(data[key]));
+
+  //         if (tempDistance == undefined) {
+  //           tempDistance = distance;
+  //         } else {
+  //           if (tempDistance > distance) {
+  //             this.calculatedLocation = key;
+  //             tempDistance = distance;
+  //           }
+  //         }
+  //       }
+  //     })
+
+  //   }, this.errorHandler);
+
+  //   //TIME STOP
+  //   var stop = performance.now();
+  //   console.log("TIME: ", (stop - start));
+  //   //
+  // }
 }
