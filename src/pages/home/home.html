@@ -27,30 +27,8 @@
     </ion-list-header>
     <ion-item class="rangeSlider">
       <ion-range min="1" max="10" snaps=true step="1" color="darkIndingo" [(ngModel)]="timePeriod">
-        <!--<ion-range min="12" max="60" snaps=true step="12" color="primaryIndigo" [(ngModel)]="timePeriod">-->
-
         <ion-label range-left>1</ion-label>
         <ion-label range-right>10</ion-label>
       </ion-range>
     </ion-item>
   </ion-list>
-<!-- 
-  <ion-item>
-    <button ion-button (click)="refresh()">REFRESH</button>
-  </ion-item>
-
-  <ion-card>
-    <ion-card-content>
-      Location: {{ calculatedLocation }}
-    </ion-card-content>
-  </ion-card> -->
-
-  <!-- <ion-item>
-  <button ion-button (click)="calculateEuclideanDistance()">EUCLIDEAN</button>
-</ion-item> -->
-
-  <!-- <ion-list>
-  <ion-item *ngFor="let network of scannedNetworks">
-    {{ network.level }} | {{ network.BSSID }}
-  </ion-item>
-</ion-list> -->
