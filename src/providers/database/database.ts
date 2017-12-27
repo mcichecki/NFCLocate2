@@ -219,7 +219,6 @@ export class DatabaseProvider {
 
   getLocationNameFor(location) {
     return this.database.executeSql("SELECT * FROM lokalizacja WHERE idLokalizacji = \"" + location + "\"", []).then(data => {
-      console.log("DB Data: ", JSON.stringify(data));
       return data.rows.item(0).nazwaLokalizacji;
     }, err => {
       return [];
