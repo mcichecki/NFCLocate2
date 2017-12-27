@@ -86,6 +86,8 @@ export class HomePage {
           '/': {}
         }).subscribe((match) => {
 
+          console.log("KEY: ", match.$args.key);
+
           let receivedData: ReceivedData = {
             key: match.$args.key,
             groupId: match.$args.groupId,
@@ -180,7 +182,7 @@ export class HomePage {
   private sendHttpPut(buildingLocation: any) {
     this.getLocationName(buildingLocation).subscribe(data => {
 
-      console.log("sendHttpPut: ", JSON.stringify(data));
+      console.log("sendHttpPut data: ", JSON.stringify(data));
 
       var body: any;
       var headers = new Headers();
@@ -196,11 +198,13 @@ export class HomePage {
         body.location = data;
       }
   
-      console.log("BODY: ", JSON.stringify(body));
   
-      headers.append('Content-Type', 'application-json');
+      headers.append('Content-Type', 'application/json');
       headers.append('Authorization', 'Basic ' + this.receivedData.key); // headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
   
+      console.log("BODY: ", JSON.stringify(body));
+      console.log("HEADER: ", JSON.stringify(headers));
+
       this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(
         success => {
           console.log("Response: ", JSON.stringify(success));
