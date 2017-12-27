@@ -193,7 +193,7 @@ export class HomePage {
       };
   
       if (data) {
-        body.buildingLocation = data;
+        body.location = data;
       }
   
       console.log("BODY: ", JSON.stringify(body));
