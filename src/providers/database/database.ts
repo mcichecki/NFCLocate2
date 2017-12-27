@@ -217,6 +217,14 @@ export class DatabaseProvider {
     })
   }
 
+  getLocationNameFor(location) {
+    return this.database.executeSql("SELECT * FROM lokalizacja WHERE idLokalizacji = \"" + location + "\"", []).then(data => {
+      return data.rows.item(0).nazwaLokalizacji;
+    }, err => {
+      return [];
+    })
+  }
+
   // #endregion
 
   // #region DELETE
