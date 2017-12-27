@@ -140,9 +140,8 @@ export class HomePage {
               this.getNetworkListPromise().subscribe(data => {
                 var tempDistance;
                 for (let key in data) {
-                  let distance = this.calculateDistaceForVector(this.createVector(data));
+                  let distance = this.calculateDistaceForVector(this.createVector(data[key]));
   
-                  console.log("DISTANCE:, ", key, " - ", distance);
                   if (tempDistance == undefined) {
                     tempDistance = distance;
                     this.calculatedLocation = key;
@@ -153,7 +152,7 @@ export class HomePage {
                     }
                   }
                 }
-                this.sendHttpPut("Location" + this.calculatedLocation);
+                this.sendHttpPut(this.calculatedLocation);
               })
             } else {
               console.log("UNDEFINED");
@@ -179,32 +178,46 @@ export class HomePage {
   }
 
   private sendHttpPut(buildingLocation: any) {
-    var body: any;
-    var headers = new Headers();
+    this.getLocationName(buildingLocation).subscribe(data => {
 
-    body = {
-      timestamp: Date.now(),
-      latitude: this.location.latitude * 1.29,
-      longitude: this.location.longitude * 1.13,
-      groupId: this.receivedData.groupId
-    };
+      console.log("sendHttpPut: ", JSON.stringify(data));
 
-    if (buildingLocation) {
-      body.buildingLocation = buildingLocation;
-    }
-
-    console.log("BODY: ", JSON.stringify(body));
-
-    headers.append('Content-Type', 'application-json');
-    headers.append('Authorization', 'Basic ' + this.receivedData.key); // headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
-
-    this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(
-      success => {
-        console.log("Response: ", JSON.stringify(success));
-      }, error => {
-        console.error("Response: ", JSON.stringify(error));
+      var body: any;
+      var headers = new Headers();
+  
+      body = {
+        timestamp: Date.now(),
+        latitude: this.location.latitude * 1.29,
+        longitude: this.location.longitude * 1.13,
+        groupId: this.receivedData.groupId
+      };
+  
+      if (data) {
+        body.buildingLocation = data;
       }
-    )
+  
+      console.log("BODY: ", JSON.stringify(body));
+  
+      headers.append('Content-Type', 'application-json');
+      headers.append('Authorization', 'Basic ' + this.receivedData.key); // headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
+  
+      this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(
+        success => {
+          console.log("Response: ", JSON.stringify(success));
+        }, error => {
+          console.error("Response: ", JSON.stringify(error));
+        }
+      )
+    })
+  }
+
+  private getLocationName(locationId : number): Observable<any> {
+    console.log("getLocationName: ",locationId);
+    if (locationId) {
+      return Observable.fromPromise(this.databaseProvider.getLocationNameFor(locationId));
+    } else {
+      return Observable.of(null);
+    }
   }
 
   private calculateDistaceForVector(vector): number {
@@ -227,7 +240,6 @@ export class HomePage {
       var difference = Math.pow((savedNetworksVector[i] - this.scannedNetworksVector[i]), 2);
       sum += difference;
     }
-
     return Math.sqrt(sum);
   }
 
@@ -239,7 +251,6 @@ export class HomePage {
       var difference = Math.abs(savedNetworksVector[i] - this.scannedNetworksVector[i]);
       sum += difference;
     }
-
     return sum;
   }
 
