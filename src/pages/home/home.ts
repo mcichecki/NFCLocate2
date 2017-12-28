@@ -218,7 +218,7 @@ export class HomePage {
   private getLocationName(locationId : number): Observable<any> {
     console.log("getLocationName: ",locationId);
     if (locationId) {
-      return Observable.fromPromise(this.databaseProvider.getLocationNameFor(locationId));
+      return Observable.fromPromise(this.databaseProvider.getLocationAndBuildingFor(locationId));
     } else {
       return Observable.of(null);
     }

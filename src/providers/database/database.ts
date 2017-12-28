@@ -217,9 +217,9 @@ export class DatabaseProvider {
     })
   }
 
-  getLocationNameFor(location) {
-    return this.database.executeSql("SELECT * FROM lokalizacja WHERE idLokalizacji = \"" + location + "\"", []).then(data => {
-      return data.rows.item(0).nazwaLokalizacji;
+  getLocationAndBuildingFor(location) {
+    return this.database.executeSql("SELECT budynek.nazwaBudynku, lokalizacja.nazwaLokalizacji FROM budynek INNER JOIN lokalizacja ON lokalizacja.idBudynku = budynek.idBudynku WHERE lokalizacja.idLokalizacji = \"" + location + "\"", []).then(data => {
+      return data.rows.item(0).nazwaBudynku + " - " + data.rows.item(0).nazwaLokalizacji;
     }, err => {
       return [];
     })
