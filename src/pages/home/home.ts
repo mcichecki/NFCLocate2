@@ -94,7 +94,7 @@ export class HomePage {
           }
 
           this.nativeStorage.setItem("receivedData", receivedData).then(
-            () => { this.receivedData = receivedData},
+            () => { this.receivedData = receivedData },
             error => console.error('Error ', error)
           );
 
@@ -122,49 +122,18 @@ export class HomePage {
       this.isGeolocationEnabled = true;
 
       this.backgroundGeolocation.configure(this.config).subscribe((location: BackgroundGeolocationResponse) => {
-        
+
         this.location = {
           timestamp: Date.now(),
           longitude: location.longitude,
           latitude: location.latitude
         }
-  
-        this.scannedNetworks = [];
-        this.scannedNetworksVector = [];
-  
-        WifiWizard.getScanResults({}, (networkList) => {
-          this.scannedNetworks = networkList;
-          this.scannedNetworksVector = this.createScannedNetworkVector();
 
-          this.defineBuilding().subscribe(idBuilding => {
-            if (idBuilding) {
-              this.currentBuilding = idBuilding;
-              this.getNetworkListPromise().subscribe(data => {
-                var tempDistance;
-                for (let key in data) {
-                  let distance = this.calculateDistaceForVector(this.createVector(data[key]));
-  
-                  if (tempDistance == undefined) {
-                    tempDistance = distance;
-                    this.calculatedLocation = key;
-                  } else {
-                    if (tempDistance > distance) {
-                      this.calculatedLocation = key;
-                      tempDistance = distance;
-                    }
-                  }
-                }
-                this.sendHttpPut(this.calculatedLocation);
-              })
-            } else {
-              console.log("UNDEFINED");
-              this.sendHttpPut(undefined);
-            }
-          });
-        });
+        this.wifiLocation();
+
       });
       this.backgroundGeolocation.start();
-  
+
       this.status = "Background start";
       this.log = this.config.fastestInterval;
     }
@@ -173,6 +142,42 @@ export class HomePage {
   disableBackgroundGeolocation() {
     this.isGeolocationEnabled = false;
     this.backgroundGeolocation.stop();
+  }
+
+  private wifiLocation() {
+    this.scannedNetworks = [];
+    this.scannedNetworksVector = [];
+
+    WifiWizard.getScanResults({}, (networkList) => {
+      this.scannedNetworks = networkList;
+      this.scannedNetworksVector = this.createScannedNetworkVector();
+
+      this.defineBuilding().subscribe(idBuilding => {
+        if (idBuilding) {
+          this.currentBuilding = idBuilding;
+          this.getNetworkListPromise().subscribe(data => {
+            var tempDistance;
+            for (let key in data) {
+              let distance = this.calculateDistaceForVector(this.createVector(data[key]));
+
+              if (tempDistance == undefined) {
+                tempDistance = distance;
+                this.calculatedLocation = key;
+              } else {
+                if (tempDistance > distance) {
+                  this.calculatedLocation = key;
+                  tempDistance = distance;
+                }
+              }
+            }
+            this.sendHttpPut(this.calculatedLocation);
+          })
+        } else {
+          console.log("UNDEFINED");
+          this.sendHttpPut(undefined);
+        }
+      });
+    });
   }
 
   private getNetworkListPromise(): Observable<any> {
@@ -186,22 +191,22 @@ export class HomePage {
 
       var body: any;
       var headers = new Headers();
-  
+
       body = {
         timestamp: Date.now(),
         latitude: this.location.latitude * 1.29,
         longitude: this.location.longitude * 1.13,
         groupId: this.receivedData.groupId
       };
-  
+
       if (data) {
         body.location = data;
       }
-  
-  
+
+
       headers.append('Content-Type', 'application/json');
       headers.append('Authorization', 'Basic ' + this.receivedData.key); // headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
-  
+
       console.log("BODY: ", JSON.stringify(body));
       console.log("HEADER: ", JSON.stringify(headers));
 
@@ -215,8 +220,8 @@ export class HomePage {
     })
   }
 
-  private getLocationName(locationId : number): Observable<any> {
-    console.log("getLocationName: ",locationId);
+  private getLocationName(locationId: number): Observable<any> {
+    console.log("getLocationName: ", locationId);
     if (locationId) {
       return Observable.fromPromise(this.databaseProvider.getLocationAndBuildingFor(locationId));
     } else {
@@ -228,7 +233,7 @@ export class HomePage {
     return this.calculateEuclideanDistance(vector) + this.calculateManhattanDistance(vector);
   }
 
-  private createScannedNetworkVector() : number[] {
+  private createScannedNetworkVector(): number[] {
     var scannedNetworksVector = [];
     for (let scannedNetwork of this.scannedNetworks) {
       scannedNetworksVector.push(scannedNetwork.level);
@@ -258,7 +263,7 @@ export class HomePage {
     return sum;
   }
 
-  private createVector(data: [any]) : number[] {
+  private createVector(data: [any]): number[] {
 
     this.savedNetworksVector = [];
     var shouldAddValue: boolean = false;
@@ -283,7 +288,7 @@ export class HomePage {
   }
 
   // BUILDING LOOKUP FUNCTION
-  private defineBuilding() : Observable<any> {
+  private defineBuilding(): Observable<any> {
     for (let scannedNetwork of this.scannedNetworks) {
       for (let savedNetwork of this.savedNetworks) {
         if (scannedNetwork.BSSID == savedNetwork.BSSID) {
