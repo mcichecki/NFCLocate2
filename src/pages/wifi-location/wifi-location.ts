@@ -1,6 +1,6 @@
 import { WifiScannerPage } from './../wifi-scanner/wifi-scanner';
 import { DatabaseProvider } from './../../providers/database/database';
-import { Component, ErrorHandler } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
 @Component({
@@ -75,9 +75,5 @@ export class WifiLocationPage {
 
   private addCancelClicked() {
     this.shouldShowAdd = false;
-  }
-
-  private insertLocation(locationName, floor) {
-    console.log("INSERTLOCATION: " + locationName + " " + floor);
   }
 }

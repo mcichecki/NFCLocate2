@@ -63,7 +63,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
     SQLite,
     SQLitePorter,
     Deeplinks,
-    NativeStorage
+    NativeStorage,
   ]
 })
 export class AppModule {}
