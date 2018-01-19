@@ -1,4 +1,3 @@
-import { WifiProvider } from './../../providers/wifi/wifi';
 import { WifiNetworkDetailsPage } from './../wifi-network-details/wifi-network-details';
 import { DatabaseProvider } from './../../providers/database/database';
 import { Component } from '@angular/core';
@@ -45,12 +44,15 @@ export class WifiScannerPage {
 
   refresh() {
     this.networks = [];
-    WifiWizard.getScanResults({}, (networkList) => this.networkRefreshHandler(networkList), this.errorHandler);
+    WifiWizard.startScan(success => {
+      WifiWizard.getScanResults({}, (networkList) => this.networkRefreshHandler(networkList), this.errorHandler);
+    }, fail => {
+      console.error("Failed scan", fail);
+    })
   }
 
   networkRefreshHandler(networkList) {
     this.networks = [...this.networks, ...networkList].reduce((s, i) =>
-      // !s.some(j => i.BSSID === j.BSSID && i.level < j.level) ? [...s, i] : s, []);
       !s.some(j => i.BSSID === j.BSSID) ? [...s, i] : s, []);
   }
 

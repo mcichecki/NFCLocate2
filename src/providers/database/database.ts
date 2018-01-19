@@ -218,8 +218,8 @@ export class DatabaseProvider {
   }
 
   getLocationAndBuildingFor(location) {
-    return this.database.executeSql("SELECT budynek.nazwaBudynku, lokalizacja.nazwaLokalizacji FROM budynek INNER JOIN lokalizacja ON lokalizacja.idBudynku = budynek.idBudynku WHERE lokalizacja.idLokalizacji = \"" + location + "\"", []).then(data => {
-      return data.rows.item(0).nazwaBudynku + " - " + data.rows.item(0).nazwaLokalizacji;
+    return this.database.executeSql("SELECT budynek.nazwaBudynku, lokalizacja.nazwaLokalizacji, lokalizacja.pietro FROM budynek INNER JOIN lokalizacja ON lokalizacja.idBudynku = budynek.idBudynku WHERE lokalizacja.idLokalizacji = \"" + location + "\"", []).then(data => {
+      return data.rows.item(0).nazwaBudynku + " - " + data.rows.item(0).nazwaLokalizacji + " - " + data.rows.item(0).pietro;
     }, err => {
       return [];
     })

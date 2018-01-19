@@ -7,9 +7,7 @@ import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocati
 
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
-import { RequestOptions } from '@angular/http/src/base_request_options';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { MyApp } from '../../app/app.component';
 import { ReceivedData } from '../../classes/received-data';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
@@ -46,27 +44,7 @@ export class HomePage {
 
   isGeolocationEnabled: boolean = false;
   status: any;
-  log: any;
   timePeriod: number = 1;
-
-  private config: BackgroundGeolocationConfig = {
-    stationaryRadius: 50,
-    distanceFilter: 50,
-    desiredAccuracy: 10,
-    debug: true,
-    locationProvider: 1,
-    interval: this.updateInterval * this.timePeriod,
-    fastestInterval: this.updateInterval * this.timePeriod,
-    activitiesInterval: this.updateInterval * this.timePeriod,
-    stopOnTerminate: false,
-    startForeground: true,
-    stopOnStillActivity: false,
-    activityType: 'AutomotiveNavigation',
-    syncThreshold: 100,
-    pauseLocationUpdates: false,
-    saveBatteryOnBackground: false,
-    maxLocations: 100
-  };
 
   constructor(public navCtrl: NavController,
     private geolocation: Geolocation,
@@ -86,17 +64,12 @@ export class HomePage {
           '/': {}
         }).subscribe((match) => {
 
-          console.log("KEY: ", match.$args.key);
-
           let receivedData: ReceivedData = {
-            key: match.$args.key,
+            key: this.fillBase64(match.$args.key),
             groupId: match.$args.groupId,
           }
 
-          this.nativeStorage.setItem("receivedData", receivedData).then(
-            () => { this.receivedData = receivedData },
-            error => console.error('Error ', error)
-          );
+          this.receivedData = receivedData;
 
         }, (nomatch) => {
           console.error('Got a deeplink that didn\'t match', nomatch);
@@ -106,7 +79,11 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
-    console.log("DATA - willEnter", JSON.stringify(this.receivedData));
+    this.savedNetworks = [];
+    
+    this.databaseProvider.getAllWifiList().then(data => {
+      this.savedNetworks = data;
+    })
   }
 
   enableBackgroundGeolocation() {
@@ -121,7 +98,26 @@ export class HomePage {
     } else {
       this.isGeolocationEnabled = true;
 
-      this.backgroundGeolocation.configure(this.config).subscribe((location: BackgroundGeolocationResponse) => {
+      var config: BackgroundGeolocationConfig = {
+        stationaryRadius: 50,
+        distanceFilter: 50,
+        desiredAccuracy: 10,
+        debug: true,
+        locationProvider: 1,
+        interval: this.updateInterval * this.timePeriod,
+        fastestInterval: this.updateInterval * this.timePeriod,
+        activitiesInterval: this.updateInterval * this.timePeriod,
+        stopOnTerminate: false,
+        startForeground: true,
+        stopOnStillActivity: false,
+        activityType: 'AutomotiveNavigation',
+        syncThreshold: 100,
+        pauseLocationUpdates: false,
+        saveBatteryOnBackground: false,
+        maxLocations: 100
+      };
+
+      this.backgroundGeolocation.configure(config).subscribe((location: BackgroundGeolocationResponse) => {
 
         this.location = {
           timestamp: Date.now(),
@@ -135,7 +131,6 @@ export class HomePage {
       this.backgroundGeolocation.start();
 
       this.status = "Background start";
-      this.log = this.config.fastestInterval;
     }
   }
 
@@ -145,40 +140,72 @@ export class HomePage {
   }
 
   private wifiLocation() {
+
     this.scannedNetworks = [];
     this.scannedNetworksVector = [];
 
-    WifiWizard.getScanResults({}, (networkList) => {
-      this.scannedNetworks = networkList;
-      this.scannedNetworksVector = this.createScannedNetworkVector();
+    WifiWizard.startScan(success => {
+      WifiWizard.getScanResults({}, (networkList) => {
 
-      this.defineBuilding().subscribe(idBuilding => {
-        if (idBuilding) {
-          this.currentBuilding = idBuilding;
-          this.getNetworkListPromise().subscribe(data => {
-            var tempDistance;
-            for (let key in data) {
-              let distance = this.calculateDistaceForVector(this.createVector(data[key]));
+        this.scannedNetworks = networkList;
+        this.scannedNetworksVector = this.createScannedNetworkVector();
 
-              if (tempDistance == undefined) {
-                tempDistance = distance;
-                this.calculatedLocation = key;
-              } else {
-                if (tempDistance > distance) {
-                  this.calculatedLocation = key;
+        this.defineBuilding().subscribe(idBuilding => {
+          if (idBuilding) {
+            this.currentBuilding = idBuilding;
+            this.getNetworkListPromise().subscribe(data => {
+              var tempDistance;
+
+              for (let key in data) {
+                this.newScannedNetworksVector(this.scannedNetworks, data[key]);
+
+                var distance;
+
+                distance = this.calculateDistaceForVector(this.savedNetworksVector);
+
+                if (tempDistance == undefined) {
                   tempDistance = distance;
+                  this.calculatedLocation = key;
+                } else {
+                  if (tempDistance > distance) {
+                    this.calculatedLocation = key;
+                    tempDistance = distance;
+                  }
                 }
               }
-            }
-            this.sendHttpPut(this.calculatedLocation);
-          })
-        } else {
-          console.log("UNDEFINED");
-          this.sendHttpPut(undefined);
-        }
+              this.sendHttpPut(this.calculatedLocation);
+            })
+          } else {
+            this.sendHttpPut(undefined);
+          }
+        });
+      }, fail => {
+        console.error("SCAN FAILED");
       });
-    });
+    })
+
   }
+
+  private newScannedNetworksVector(scannedNetworks, savedNetworks) {
+    let scannedLength = scannedNetworks.length;
+    let savedLength = savedNetworks.length;
+
+    var scannedVector = [];
+    var savedVector = [];
+
+    for (var i = 0; i < scannedLength; i++) {
+      for (var j = 0; j < savedLength; j++) {
+        if (scannedNetworks[i].BSSID == savedNetworks[j].BSSID) {
+          scannedVector.push(scannedNetworks[i].level);
+          savedVector.push(savedNetworks[j].level);
+        }
+      }
+
+      this.scannedNetworksVector = scannedVector;
+      this.savedNetworksVector = savedVector;
+    }
+  }
+
 
   private getNetworkListPromise(): Observable<any> {
     return Observable.fromPromise(this.databaseProvider.getNetworksFor(this.currentBuilding));
@@ -187,15 +214,13 @@ export class HomePage {
   private sendHttpPut(buildingLocation: any) {
     this.getLocationName(buildingLocation).subscribe(data => {
 
-      console.log("sendHttpPut data: ", JSON.stringify(data));
-
       var body: any;
       var headers = new Headers();
 
       body = {
         timestamp: Date.now(),
-        latitude: this.location.latitude * 1.29,
-        longitude: this.location.longitude * 1.13,
+        latitude: this.location.latitude,
+        longitude: this.location.longitude,
         groupId: this.receivedData.groupId
       };
 
@@ -203,12 +228,8 @@ export class HomePage {
         body.location = data;
       }
 
-
       headers.append('Content-Type', 'application/json');
-      headers.append('Authorization', 'Basic ' + this.receivedData.key); // headers.append('Authorization', 'Basic MTIzNDU2OjEyMzQ1Ng==');
-
-      console.log("BODY: ", JSON.stringify(body));
-      console.log("HEADER: ", JSON.stringify(headers));
+      headers.append('Authorization', 'Basic ' + this.receivedData.key);
 
       this.http.put(this.server, body, { headers: headers }).map(res => res.json()).subscribe(
         success => {
@@ -220,8 +241,7 @@ export class HomePage {
     })
   }
 
-  private getLocationName(locationId: number): Observable<any> {
-    console.log("getLocationName: ", locationId);
+  private getLocationName(locationId: any): Observable<any> {
     if (locationId) {
       return Observable.fromPromise(this.databaseProvider.getLocationAndBuildingFor(locationId));
     } else {
@@ -229,8 +249,8 @@ export class HomePage {
     }
   }
 
-  private calculateDistaceForVector(vector): number {
-    return this.calculateEuclideanDistance(vector) + this.calculateManhattanDistance(vector);
+  private calculateDistaceForVector(vector: number[]): number {
+    return vector.length == 0 ? 99999 : (this.calculateEuclideanDistance(vector) + this.calculateManhattanDistance(vector)) / vector.length;
   }
 
   private createScannedNetworkVector(): number[] {
@@ -246,10 +266,11 @@ export class HomePage {
 
     var sum = 0;
     for (var i = 0; i < vectorLength; i++) {
-      var difference = Math.pow((savedNetworksVector[i] - this.scannedNetworksVector[i]), 2);
+      var difference = Math.pow((this.savedNetworksVector[i] - this.scannedNetworksVector[i]), 2);
       sum += difference;
     }
-    return Math.sqrt(sum);
+
+    return Math.sqrt(sum / vectorLength);
   }
 
   private calculateManhattanDistance(savedNetworksVector: any): number {
@@ -257,34 +278,11 @@ export class HomePage {
 
     var sum = 0;
     for (var i = 0; i < vectorLength; i++) {
-      var difference = Math.abs(savedNetworksVector[i] - this.scannedNetworksVector[i]);
+      var difference = Math.abs(this.savedNetworksVector[i] - this.scannedNetworksVector[i]);
       sum += difference;
     }
-    return sum;
-  }
 
-  private createVector(data: [any]): number[] {
-
-    this.savedNetworksVector = [];
-    var shouldAddValue: boolean = false;
-    var networkLevel = 0;
-
-    for (let scannedNetwork of this.scannedNetworks) {
-      for (let network of data) {
-        if (scannedNetwork.BSSID == network.BSSID) {
-          shouldAddValue = true;
-          networkLevel = network.level;
-          break;
-        }
-      }
-      if (shouldAddValue) {
-        this.savedNetworksVector.push(networkLevel);
-        shouldAddValue = false;
-      } else {
-        this.savedNetworksVector.push(-120);
-      }
-    }
-    return this.savedNetworksVector;
+    return sum / vectorLength;
   }
 
   // BUILDING LOOKUP FUNCTION
@@ -299,7 +297,22 @@ export class HomePage {
     return Observable.of(null);
   }
 
-  private errorHandler(e) {
-    alert('Problem');
+  private fillBase64(key: string): string {
+    switch (key.length % 4) {
+      case 2: {
+        return key + "==";
+      }
+      case 3: {
+        return key + "=";
+
+      }
+      default: {
+        return key;
+      }
+    }
+  }
+
+  manualScan() {
+    this.wifiLocation();
   }
 }

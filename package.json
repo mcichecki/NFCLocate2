@@ -31,6 +31,7 @@
     "@ionic/storage": "2.0.1",
     "com.pylonproducts.wifiwizard": "https://github.com/hoerresb/WifiWizard",
     "cordova-android": "~6.3.0",
+    "cordova-ios": "4.2.0",
     "cordova-plugin-console": "^1.0.5",
     "cordova-plugin-crosswalk-webview": "^2.3.0",
     "cordova-plugin-device": "^1.1.4",
@@ -99,9 +100,9 @@
         "CONTENT_AUTHORITY": "$PACKAGE_NAME"
       },
       "ionic-plugin-deeplinks": {
-        "URL_SCHEME": "nfclocate",
+        "URL_SCHEME": "neficolocate",
         "DEEPLINK_SCHEME": "https",
-        "DEEPLINK_HOST": "nefico.pl",
+        "DEEPLINK_HOST": "nefico.tele.pw.edu.pl",
         "ANDROID_PATH_PREFIX": "/",
         "ANDROID_2_PATH_PREFIX": "/",
         "ANDROID_3_PATH_PREFIX": "/",
@@ -119,7 +120,8 @@
       "cordova-plugin-nativestorage": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
