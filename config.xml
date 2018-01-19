@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ionicframework.neficolocate" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Nefico locate</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <description>Nefico plugin app which provides information about user's current location - outside and inside the building</description>
+    <author email="m.cichecki@stud.elka.pw.edu.pl" href="https://nefico.tele.pw.edu.pl:8080">Michal Cichecki</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
@@ -15,6 +15,12 @@
     <platform name="android">
         <preference name="loadUrlTimeoutValue" value="700000" />
         <allow-intent href="market:*" />
+        <icon src="resources/android/icon/drawable-hdpi-icon.png" />
+        <icon src="resources/android/icon/drawable-ldpi-icon.png" />
+        <icon src="resources/android/icon/drawable-mdpi-icon.png" />
+        <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
+        <icon src="resources/android/icon/drawable-xxhdpi-icon.png" />
+        <icon src="resources/android/icon/drawable-xxxhdpi-icon.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
