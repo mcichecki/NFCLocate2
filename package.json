@@ -30,7 +30,7 @@
     "@ionic-native/status-bar": "3.4.2",
     "@ionic/storage": "2.0.1",
     "com.pylonproducts.wifiwizard": "https://github.com/hoerresb/WifiWizard",
-    "cordova-android": "~6.3.0",
+    "cordova-android": "6.3.0",
     "cordova-ios": "4.2.0",
     "cordova-plugin-console": "^1.0.5",
     "cordova-plugin-crosswalk-webview": "^2.3.0",
@@ -120,8 +120,8 @@
       "cordova-plugin-nativestorage": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
