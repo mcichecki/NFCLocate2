@@ -219,8 +219,8 @@ export class HomePage {
 
       body = {
         timestamp: Date.now(),
-        latitude: this.location.latitude * 1.29,
-        longitude: this.location.longitude * 1.13,
+        latitude: this.location.latitude,
+        longitude: this.location.longitude,
         groupId: this.receivedData.groupId
       };
 

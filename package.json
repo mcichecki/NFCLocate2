@@ -100,9 +100,9 @@
         "CONTENT_AUTHORITY": "$PACKAGE_NAME"
       },
       "ionic-plugin-deeplinks": {
-        "URL_SCHEME": "nfclocate",
+        "URL_SCHEME": "neficolocate",
         "DEEPLINK_SCHEME": "https",
-        "DEEPLINK_HOST": "nefico.pl",
+        "DEEPLINK_HOST": "nefico.tele.pw.edu.pl",
         "ANDROID_PATH_PREFIX": "/",
         "ANDROID_2_PATH_PREFIX": "/",
         "ANDROID_3_PATH_PREFIX": "/",
