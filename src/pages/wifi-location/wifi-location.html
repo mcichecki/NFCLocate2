@@ -42,8 +42,7 @@
 
   <ion-list>
     <ion-item-sliding *ngFor="let location of locations" (click)="openWifiScanner(location, $event)">
-      <ion-item>{{ location?.name }}
-      </ion-item>
+      <ion-item>{{ location?.name }} {{ location?.floor }} </ion-item>
       <ion-item-options side="right">
         <button ion-button (click)="delete(location, $event)" color="secondaryRuby">
           <ion-icon name="close"></ion-icon>
